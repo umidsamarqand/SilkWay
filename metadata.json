@@ -1,0 +1,6 @@
+{
+  "name": "VentureWay - Tourism & Travel Logistics Navigator",
+  "description": "Interactive tourism and travel logistics platform combining dynamic Google Maps exploration, multi-stop transit routing, budget optimization, and activity filtering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
