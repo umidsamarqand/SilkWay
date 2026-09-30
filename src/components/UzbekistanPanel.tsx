@@ -257,27 +257,31 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
   return (
     <div className="space-y-4">
       {/* Uzbekistan Hero Banner */}
-      <div className="p-4 bg-gradient-to-br from-blue-900 via-slate-900 to-indigo-950 text-white rounded-2xl relative overflow-hidden shadow-sm">
+      <div className="p-4 bg-gradient-to-br from-[#0c1838] via-[#091124] to-[#1a0f35] text-white rounded-2xl relative overflow-hidden shadow-xl border border-amber-500/30 ring-1 ring-amber-400/20">
+        {/* Atmospheric Ambient Glows */}
+        <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-blue-500/20 rounded-full blur-2xl pointer-events-none" />
+
         <div className="relative z-10">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-bold tracking-widest uppercase bg-blue-500/20 text-blue-300 border border-blue-400/30 px-2 py-0.5 rounded">
-              Uzbekistan Tourism & Gastronomy
+            <span className="text-[10px] font-bold tracking-widest uppercase bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded shadow-xs">
+              Silk Way · Experience Uzbekistan Effortlessly
             </span>
             <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1">
               <Check className="w-3.5 h-3.5" /> Full Country Directory Active
             </span>
           </div>
 
-          <h3 className="text-base font-bold text-white mb-1">
+          <h3 className="text-base font-bold text-white mb-1 tracking-tight">
             Hotels, Hostels, Restaurants & Taxis
           </h3>
           <p className="text-xs text-slate-300 leading-relaxed mb-3">
-            Ranked and filtered by services, amenities, and star ratings across Tashkent, Samarkand, Bukhara, Khiva, and Zaamin.
+            Experience Uzbekistan effortlessly: boutique hotels, gourmet restaurants, backpacker hostels, and official airport taxi transfers across Tashkent, Samarkand, Bukhara, Khiva, and Zaamin.
           </p>
 
           <button
             onClick={() => setShowTaxiModal(true)}
-            className="w-full py-2 px-3 text-xs font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-xs"
+            className="w-full py-2.5 px-3 text-xs font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-300 text-slate-950 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01] active:scale-[0.99]"
           >
             <Car className="w-4 h-4 text-slate-950" />
             <span>Book Airport Taxi Pickup (Name Sign Included)</span>
@@ -286,87 +290,87 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
       </div>
 
       {/* Sub-Category Segmented Filter */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 p-1 bg-slate-100 rounded-xl">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 p-1.5 bg-[#0c1838]/90 border border-slate-800/80 rounded-2xl shadow-sm">
         {/* 1. Hotels */}
         <button
           onClick={() => setActiveSubtype('hotel')}
-          className={`py-1.5 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+          className={`py-1.5 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 ${
             activeSubtype === 'hotel'
-              ? 'bg-white text-slate-950 shadow-xs font-bold'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <Building2 className="w-3.5 h-3.5 text-amber-600" />
+          <Building2 className={`w-3.5 h-3.5 ${activeSubtype === 'hotel' ? 'text-slate-950' : 'text-amber-400'}`} />
           <span>Hotels ({getSubtypeCount('hotel')})</span>
         </button>
 
         {/* 2. Restaurants */}
         <button
           onClick={() => setActiveSubtype('restaurant')}
-          className={`py-1.5 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+          className={`py-1.5 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 ${
             activeSubtype === 'restaurant'
-              ? 'bg-white text-slate-950 shadow-xs font-bold'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <UtensilsCrossed className="w-3.5 h-3.5 text-orange-600" />
+          <UtensilsCrossed className={`w-3.5 h-3.5 ${activeSubtype === 'restaurant' ? 'text-slate-950' : 'text-orange-400'}`} />
           <span>Restaurants ({getSubtypeCount('restaurant')})</span>
         </button>
 
         {/* 3. Hostels */}
         <button
           onClick={() => setActiveSubtype('hostel')}
-          className={`py-1.5 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+          className={`py-1.5 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 ${
             activeSubtype === 'hostel'
-              ? 'bg-white text-slate-950 shadow-xs font-bold'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <Bed className="w-3.5 h-3.5 text-emerald-600" />
+          <Bed className={`w-3.5 h-3.5 ${activeSubtype === 'hostel' ? 'text-slate-950' : 'text-emerald-400'}`} />
           <span>Hostels ({getSubtypeCount('hostel')})</span>
         </button>
 
         {/* 4. Places to Watch */}
         <button
           onClick={() => setActiveSubtype('place_to_watch')}
-          className={`py-1.5 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+          className={`py-1.5 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 ${
             activeSubtype === 'place_to_watch'
-              ? 'bg-white text-slate-950 shadow-xs font-bold'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <Eye className="w-3.5 h-3.5 text-red-600" />
+          <Eye className={`w-3.5 h-3.5 ${activeSubtype === 'place_to_watch' ? 'text-slate-950' : 'text-red-400'}`} />
           <span>Sightseeing ({getSubtypeCount('place_to_watch')})</span>
         </button>
 
         {/* 5. Airport Taxis */}
         <button
           onClick={() => setActiveSubtype('airport_taxi')}
-          className={`py-1.5 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 col-span-2 sm:col-span-1 ${
+          className={`py-1.5 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 col-span-2 sm:col-span-1 ${
             activeSubtype === 'airport_taxi'
-              ? 'bg-white text-slate-950 shadow-xs font-bold'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <Car className="w-3.5 h-3.5 text-yellow-600" />
+          <Car className={`w-3.5 h-3.5 ${activeSubtype === 'airport_taxi' ? 'text-slate-950' : 'text-yellow-400'}`} />
           <span>Taxis ({getSubtypeCount('airport_taxi')})</span>
         </button>
       </div>
 
       {/* City & District Interactive Zoom & Mark Selector */}
-      <div className="p-3 bg-slate-50/95 rounded-2xl border border-slate-200 shadow-xs space-y-2.5">
+      <div className="p-3.5 bg-[#0c1838]/85 rounded-2xl border border-slate-800/80 shadow-lg space-y-2.5 text-white">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-            <MapPin className="w-3.5 h-3.5 text-blue-600" />
+          <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+            <MapPin className="w-3.5 h-3.5 text-amber-400" />
             <span>Select City or District to Zoom & Mark</span>
           </div>
           {selectedDistrictId !== 'all' ? (
-            <span className="text-[10px] font-bold text-amber-900 bg-amber-200/80 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-600 animate-ping" />
+            <span className="text-[10px] font-bold text-amber-950 bg-amber-400 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping" />
               <span>Marked & Zoomed</span>
             </span>
           ) : (
-            <span className="text-[10px] text-slate-500 flex items-center gap-1">
+            <span className="text-[10px] text-slate-400 flex items-center gap-1">
               <ZoomIn className="w-3 h-3 text-slate-400" />
               <span>Click to fly & pinpoint</span>
             </span>
@@ -383,13 +387,13 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 onClick={() => handleSelectLocation(city)}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-xl transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
                   isSelected
-                    ? 'bg-slate-900 text-white shadow-sm ring-1 ring-slate-900'
-                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 hover:border-slate-300'
+                    ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20 ring-1 ring-amber-400'
+                    : 'bg-slate-900/90 text-slate-300 border border-slate-700/60 hover:bg-slate-800 hover:text-white hover:border-slate-600'
                 }`}
               >
                 <span>{city.name}</span>
                 <span className={`text-[10px] font-mono px-1 py-0.2 rounded ${
-                  isSelected ? 'bg-slate-800 text-amber-300' : 'bg-slate-100 text-slate-500'
+                  isSelected ? 'bg-slate-950 text-amber-300' : 'bg-slate-800 text-slate-400'
                 }`}>
                   {city.cityName === 'all' 
                     ? UZBEKISTAN_POINTS.length 
@@ -402,17 +406,17 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
 
         {/* 2. Historic Districts & Quarters Pills */}
         {availableDistricts.length > 0 && (
-          <div className="pt-2 border-t border-slate-200/80">
+          <div className="pt-2 border-t border-slate-800/80">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider flex items-center gap-1">
+              <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider flex items-center gap-1">
                 <span>📍 Key Historic Districts & Quarters:</span>
               </span>
-              <span className="text-[10px] text-slate-500 font-mono">
+              <span className="text-[10px] text-slate-400 font-mono">
                 Tap to zoom 15x
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
               {availableDistricts.map((dist) => {
                 const isDistActive = selectedDistrictId === dist.id;
                 return (
@@ -421,12 +425,12 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     onClick={() => handleSelectLocation(dist)}
                     className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-all whitespace-nowrap flex items-center gap-1 shrink-0 ${
                       isDistActive
-                        ? 'bg-amber-500 text-slate-950 font-bold shadow-xs ring-2 ring-amber-400'
-                        : 'bg-white text-slate-700 border border-amber-200/80 hover:bg-amber-50/60'
+                        ? 'bg-amber-400 text-slate-950 font-bold shadow-xs ring-2 ring-amber-300'
+                        : 'bg-slate-900/80 text-slate-300 border border-slate-700/60 hover:bg-slate-800 hover:text-white'
                     }`}
                   >
                     <span>{dist.name}</span>
-                    <span className="text-[10px] text-slate-500 font-mono">
+                    <span className="text-[10px] text-slate-400 font-mono">
                       · {dist.cityName}
                     </span>
                   </button>
@@ -438,7 +442,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
       </div>
 
       {/* ===================== RANK & FILTER TOOLBAR ===================== */}
-      <div className="p-3.5 bg-white rounded-2xl border border-slate-200 shadow-xs space-y-3">
+      <div className="p-3.5 bg-[#0c1838]/85 rounded-2xl border border-slate-800/80 shadow-lg space-y-3 text-white">
         {/* Row 1: Search & Sorting Selector */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <div className="relative flex-1">
@@ -448,12 +452,12 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by hotel name, dish, street, or feature..."
-              className="w-full pl-9 pr-7 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900"
+              className="w-full pl-9 pr-7 py-1.5 text-xs bg-slate-900/90 border border-slate-700/80 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-amber-400"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -461,27 +465,27 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           </div>
 
           {/* Ranking / Sort Dropdown */}
-          <div className="flex items-center gap-1.5 shrink-0 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs">
-            <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
-            <span className="text-[11px] text-slate-500 font-medium">Rank by:</span>
+          <div className="flex items-center gap-1.5 shrink-0 bg-slate-900/90 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs">
+            <ArrowUpDown className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[11px] text-slate-400 font-medium">Rank:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-transparent text-xs font-semibold text-slate-900 focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer"
             >
-              <option value="rating">⭐ Highest Rated</option>
-              <option value="popular">🔥 Most Popular</option>
-              <option value="stars">✨ Stars (5★ to 3★)</option>
-              <option value="price_low">💲 Price: Low to High</option>
-              <option value="price_high">💎 Price: High to Low</option>
+              <option value="rating" className="bg-slate-900 text-white">⭐ Highest Rated</option>
+              <option value="popular" className="bg-slate-900 text-white">🔥 Most Popular</option>
+              <option value="stars" className="bg-slate-900 text-white">✨ Stars (5★ to 3★)</option>
+              <option value="price_low" className="bg-slate-900 text-white">💲 Price: Low to High</option>
+              <option value="price_high" className="bg-slate-900 text-white">💎 Price: High to Low</option>
             </select>
           </div>
         </div>
 
         {/* Row 2: Star Filter */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider shrink-0 flex items-center gap-1">
-            <Star className="w-3 h-3 text-amber-500 fill-amber-400" />
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs scrollbar-none">
+          <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
+            <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
             Stars:
           </span>
           {[
@@ -497,8 +501,8 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 onClick={() => setSelectedStar(starOpt.value as any)}
                 className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-all ${
                   isActive
-                    ? 'bg-amber-500 text-slate-950 font-bold shadow-xs'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    ? 'bg-amber-400 text-slate-950 font-bold shadow-xs'
+                    : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/60'
                 }`}
               >
                 {starOpt.label}
@@ -510,21 +514,21 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         {/* Row 3: Services & Amenities Filter */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
-              <Filter className="w-3 h-3 text-slate-400" />
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+              <Filter className="w-3 h-3 text-amber-400" />
               Filter by Services & Amenities:
             </span>
             {selectedServices.length > 0 && (
               <button
                 onClick={() => setSelectedServices([])}
-                className="text-[11px] text-blue-600 hover:text-blue-800 font-semibold"
+                className="text-[11px] text-amber-400 hover:text-amber-300 font-semibold"
               >
                 Clear ({selectedServices.length})
               </button>
             )}
           </div>
 
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {Object.entries(SERVICE_META).map(([srvKey, srv]) => {
               const isSelected = selectedServices.includes(srvKey);
               return (
@@ -537,8 +541,8 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                   }}
                   className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ${
                     isSelected
-                      ? 'bg-slate-900 text-white font-bold shadow-xs'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-transparent'
+                      ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-xs'
+                      : 'bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/60'
                   }`}
                 >
                   <span>{srv.icon}</span>
@@ -551,11 +555,11 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
 
         {/* Row 4: Cuisine Filter (If restaurants or all active) */}
         {(activeSubtype === 'restaurant' || activeSubtype === 'all') && (
-          <div className="pt-2 border-t border-slate-100">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
+          <div className="pt-2 border-t border-slate-800/80">
+            <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block mb-1.5">
               🍲 Regional Cuisine Specialties:
             </span>
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
               {CUISINE_OPTIONS.map((c) => {
                 const isActive = selectedCuisine === c.id;
                 return (
@@ -564,8 +568,8 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     onClick={() => setSelectedCuisine(c.id)}
                     className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-all ${
                       isActive
-                        ? 'bg-orange-600 text-white font-bold shadow-xs'
-                        : 'bg-orange-50 text-orange-950 border border-orange-200 hover:bg-orange-100'
+                        ? 'bg-orange-500 text-white font-bold shadow-xs'
+                        : 'bg-orange-950/40 text-orange-200 border border-orange-800/60 hover:bg-orange-900/60'
                     }`}
                   >
                     {c.label}
@@ -577,9 +581,9 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         )}
 
         {/* Results summary bar */}
-        <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
+        <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
           <span>
-            Showing <strong className="text-slate-900">{filteredAndRankedPoints.length}</strong> verified spots
+            Showing <strong className="text-white">{filteredAndRankedPoints.length}</strong> verified spots
             {selectedCity !== 'all' && ` in ${selectedCity}`}
           </span>
           {(selectedStar !== 'all' || selectedServices.length > 0 || selectedCuisine !== 'all' || searchQuery) && (
@@ -590,9 +594,9 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 setSelectedCuisine('all');
                 setSearchQuery('');
               }}
-              className="text-red-600 hover:text-red-700 font-semibold"
+              className="text-amber-400 hover:text-amber-300 font-semibold"
             >
-              Reset All Filters
+              Reset Filters
             </button>
           )}
         </div>
@@ -600,30 +604,30 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
 
       {/* Active Airport Taxi Bookings Section */}
       {bookings.length > 0 && (
-        <div className="p-3.5 bg-emerald-50/70 border border-emerald-200/80 rounded-xl space-y-2">
+        <div className="p-3.5 bg-emerald-950/40 border border-emerald-800/70 rounded-2xl space-y-2 text-emerald-200">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
               Active Airport Pickups ({bookings.length})
             </span>
-            <span className="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+            <span className="text-[10px] uppercase font-bold text-emerald-300 bg-emerald-900/60 border border-emerald-700/60 px-2 py-0.5 rounded">
               Confirmed
             </span>
           </div>
 
           {bookings.map((b) => (
-            <div key={b.id} className="p-2.5 bg-white rounded-lg border border-emerald-100 text-xs space-y-1">
-              <div className="flex items-center justify-between font-bold text-slate-900">
+            <div key={b.id} className="p-2.5 bg-slate-900/90 rounded-xl border border-emerald-900/60 text-xs space-y-1 text-white">
+              <div className="flex items-center justify-between font-bold text-white">
                 <span>{b.passengerName} (Flight {b.flightNumber})</span>
-                <span className="font-mono text-emerald-700">${b.priceUsd} USD</span>
+                <span className="font-mono text-emerald-400">${b.priceUsd} USD</span>
               </div>
-              <div className="text-[11px] text-slate-500 flex items-center justify-between">
+              <div className="text-[11px] text-slate-400 flex items-center justify-between">
                 <span>{b.airport} → {b.dropoffLocation}</span>
                 <span>{b.passengers} Pax · {b.luggageCount} Bags</span>
               </div>
-              <div className="text-[11px] text-slate-700 pt-1 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-slate-600">Assigned Driver: <strong>{b.driverName}</strong></span>
-                <span className="font-mono text-blue-600">{b.driverPhone}</span>
+              <div className="text-[11px] text-slate-300 pt-1 border-t border-slate-800 flex items-center justify-between">
+                <span className="text-slate-400">Driver: <strong className="text-white">{b.driverName}</strong></span>
+                <span className="font-mono text-amber-400">{b.driverPhone}</span>
               </div>
             </div>
           ))}
@@ -633,10 +637,10 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
       {/* Cards List for Filtered & Ranked Points */}
       <div className="space-y-3">
         {filteredAndRankedPoints.length === 0 ? (
-          <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 text-slate-500 space-y-2">
-            <Search className="w-8 h-8 text-slate-300 mx-auto" />
-            <p className="text-sm font-bold text-slate-800">No spots match your exact filter</p>
-            <p className="text-xs text-slate-500 max-w-sm mx-auto">
+          <div className="p-8 text-center bg-[#0c1838]/85 rounded-2xl border border-slate-800 text-slate-400 space-y-2">
+            <Search className="w-8 h-8 text-slate-500 mx-auto" />
+            <p className="text-sm font-bold text-white">No spots match your exact filter</p>
+            <p className="text-xs text-slate-400 max-w-sm mx-auto">
               Try adjusting your star ratings, services, or cuisine choices to discover more spots across Uzbekistan.
             </p>
             <button
@@ -648,7 +652,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 setSelectedCity('all');
                 setSelectedDistrictId('all');
               }}
-              className="mt-2 px-3 py-1.5 text-xs font-semibold bg-slate-900 text-white rounded-lg hover:bg-slate-800"
+              className="mt-2 px-3 py-1.5 text-xs font-bold bg-amber-400 text-slate-950 rounded-xl hover:bg-amber-300 shadow-md shadow-amber-500/20"
             >
               Reset All Filters
             </button>
@@ -666,19 +670,19 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 }}
                 className={`p-3.5 rounded-2xl border transition-all cursor-pointer text-left ${
                   isSelected
-                    ? 'border-blue-600 bg-blue-50/40 shadow-sm ring-2 ring-blue-500'
-                    : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-xs'
+                    ? 'border-amber-400 bg-[#0f1f47] shadow-lg shadow-amber-500/10 ring-2 ring-amber-400/40'
+                    : 'border-slate-800/90 bg-[#0c1838]/85 hover:border-amber-400/60 hover:shadow-lg hover:shadow-black/30'
                 }`}
               >
                 <div className="flex gap-3">
-                  <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-slate-100 relative">
+                  <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-slate-900 relative">
                     <img
                       src={point.imageUrl}
                       alt={point.name}
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-slate-950/80 text-white text-[9px] font-bold rounded">
+                    <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-slate-950/85 text-white text-[9px] font-bold rounded">
                       {point.city}
                     </div>
 
@@ -691,15 +695,15 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-1 mb-1">
-                      <h5 className="text-xs font-bold text-slate-900 line-clamp-1">
+                      <h5 className="text-xs font-bold text-white line-clamp-1">
                         {point.name}
                       </h5>
                       {point.priceUsd !== undefined && (
                         <div className="text-right shrink-0">
-                          <span className="text-xs font-mono font-bold text-emerald-800 tabular-nums">
+                          <span className="text-xs font-mono font-bold text-amber-400 tabular-nums">
                             ${point.priceUsd}
                           </span>
-                          <span className="text-[10px] text-slate-500 block -mt-0.5">
+                          <span className="text-[10px] text-slate-400 block -mt-0.5">
                             {point.type === 'hotel' || point.type === 'hostel' 
                               ? '/night' 
                               : point.type === 'restaurant'
@@ -713,8 +717,8 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     </div>
 
                     {/* Metadata line: Stars, Category, Rating */}
-                    <div className="text-[11px] text-slate-500 flex items-center gap-1.5 mb-1.5 flex-wrap">
-                      <span className="capitalize font-semibold text-slate-800">
+                    <div className="text-[11px] text-slate-400 flex items-center gap-1.5 mb-1.5 flex-wrap">
+                      <span className="capitalize font-semibold text-amber-300">
                         {point.type === 'place_to_watch' 
                           ? 'Must-See Spot' 
                           : point.type === 'restaurant'
@@ -726,7 +730,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                           : '🚕 Airport Taxi'}
                       </span>
                       <span>·</span>
-                      <span className="flex items-center gap-0.5 text-amber-700 font-bold">
+                      <span className="flex items-center gap-0.5 text-amber-400 font-bold">
                         <Star className="w-3 h-3 fill-amber-400 stroke-none" />
                         {point.rating}
                       </span>
@@ -735,14 +739,14 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                       {point.district && (
                         <>
                           <span>·</span>
-                          <span className="text-blue-700 font-medium text-[10px] bg-blue-50 px-1.5 py-0.2 rounded">
+                          <span className="text-amber-200 font-medium text-[10px] bg-amber-500/20 border border-amber-500/30 px-1.5 py-0.2 rounded">
                             {point.district}
                           </span>
                         </>
                       )}
                     </div>
 
-                    <p className="text-xs text-slate-600 line-clamp-2 mb-2 leading-relaxed">
+                    <p className="text-xs text-slate-300 line-clamp-2 mb-2 leading-relaxed">
                       {point.description}
                     </p>
 
@@ -755,7 +759,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                           return (
                             <span
                               key={srvKey}
-                              className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-medium rounded-md whitespace-nowrap shrink-0"
+                              className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-slate-900/90 border border-slate-700/60 text-slate-200 text-[10px] font-medium rounded-md whitespace-nowrap shrink-0"
                             >
                               <span>{meta.icon}</span>
                               <span>{meta.label}</span>
@@ -771,7 +775,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                         {point.cuisine.map((cKey) => (
                           <span
                             key={cKey}
-                            className="inline-flex items-center px-1.5 py-0.5 bg-orange-50 text-orange-800 text-[10px] font-semibold rounded-md whitespace-nowrap shrink-0 border border-orange-200/60"
+                            className="inline-flex items-center px-1.5 py-0.5 bg-orange-950/40 text-orange-300 text-[10px] font-semibold rounded-md whitespace-nowrap shrink-0 border border-orange-800/60"
                           >
                             #{cKey.replace('_', ' ')}
                           </span>
@@ -779,11 +783,11 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                       </div>
                     )}
 
-                    <div className="p-2 bg-slate-50 rounded-lg text-[11px] text-slate-700 mb-2 border border-slate-100">
-                      <strong className="text-slate-900">Logistics & Tips:</strong> {point.logisticsNote}
+                    <div className="p-2 bg-slate-900/90 rounded-lg text-[11px] text-slate-300 mb-2 border border-slate-800">
+                      <strong className="text-amber-300">Logistics & Tips:</strong> {point.logisticsNote}
                     </div>
 
-                    <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+                    <div className="flex items-center justify-between pt-1 border-t border-slate-800/80">
                       <span className="text-[10px] text-slate-400 truncate max-w-[170px]">
                         {point.address}
                       </span>
@@ -793,7 +797,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                           e.stopPropagation();
                           onFlyToPoint(point);
                         }}
-                        className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                        className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
                       >
                         <Navigation className="w-3 h-3" />
                         <span>Pin on Map</span>

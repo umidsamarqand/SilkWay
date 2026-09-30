@@ -19,96 +19,103 @@ export const Navbar: React.FC<NavbarProps> = ({
   onResetFilters
 }) => {
   return (
-    <header className="h-16 bg-white border-b border-slate-200 px-4 md:px-6 flex items-center justify-between z-30 shrink-0">
-      {/* Zone 1: Single text element wordmark */}
+    <header className="h-16 bg-[#091124]/95 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-6 flex items-center justify-between z-30 shrink-0 text-white">
+      {/* Zone 1: Wordmark & Motto */}
       <div className="flex items-center gap-3">
         <a 
           href="/" 
-          className="text-lg md:text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2"
-          aria-label="VentureWay Homepage"
+          className="flex items-center gap-2.5 group"
+          aria-label="Silk Way Homepage"
         >
-          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-xs">
-            <Compass className="w-4 h-4 text-emerald-400" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 text-slate-950 flex items-center justify-center shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            <Compass className="w-5 h-5 text-slate-950" />
           </div>
-          <span className="font-extrabold text-slate-950">VentureWay</span>
-          <span className="hidden sm:inline-block text-xs font-semibold text-slate-500 uppercase tracking-wider pl-1.5 border-l border-slate-200">
-            Uzbekistan
-          </span>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5">
+              <span className="text-base sm:text-lg font-black tracking-tight text-white">Silk Way</span>
+              <span className="text-[10px] font-bold text-amber-300 bg-amber-500/20 border border-amber-400/30 px-1.5 py-0.2 rounded uppercase tracking-wider">
+                Uzbekistan
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-400 font-medium tracking-tight">
+              experience uzbekistan effortlessly
+            </span>
+          </div>
         </a>
       </div>
 
       {/* Zone 2: Clean nav links */}
-      <nav className="hidden xl:flex items-center gap-6 text-xs font-semibold text-slate-600">
+      <nav className="hidden xl:flex items-center gap-6 text-xs font-semibold text-slate-300">
         <button
           onClick={() => onSelectTab('hotels')}
-          className={`flex items-center gap-1.5 hover:text-slate-950 transition-colors py-1 ${
-            activeTab === 'hotels' ? 'text-slate-950 font-bold border-b-2 border-slate-950 -mb-[2px]' : ''
+          className={`flex items-center gap-1.5 hover:text-white transition-colors py-1 ${
+            activeTab === 'hotels' ? 'text-amber-300 font-bold border-b-2 border-amber-400 -mb-[2px]' : ''
           }`}
         >
-          <Building2 className="w-3.5 h-3.5 text-amber-600" />
+          <Building2 className="w-3.5 h-3.5 text-amber-400" />
           <span>Hotels</span>
         </button>
 
         <button
           onClick={() => onSelectTab('restaurants')}
-          className={`flex items-center gap-1.5 hover:text-slate-950 transition-colors py-1 ${
-            activeTab === 'restaurants' ? 'text-slate-950 font-bold border-b-2 border-slate-950 -mb-[2px]' : ''
+          className={`flex items-center gap-1.5 hover:text-white transition-colors py-1 ${
+            activeTab === 'restaurants' ? 'text-amber-300 font-bold border-b-2 border-amber-400 -mb-[2px]' : ''
           }`}
         >
-          <UtensilsCrossed className="w-3.5 h-3.5 text-orange-600" />
+          <UtensilsCrossed className="w-3.5 h-3.5 text-orange-400" />
           <span>Restaurants</span>
         </button>
 
         <button
           onClick={() => onSelectTab('sightseeing')}
-          className={`flex items-center gap-1.5 hover:text-slate-950 transition-colors py-1 ${
-            activeTab === 'sightseeing' ? 'text-slate-950 font-bold border-b-2 border-slate-950 -mb-[2px]' : ''
+          className={`flex items-center gap-1.5 hover:text-white transition-colors py-1 ${
+            activeTab === 'sightseeing' ? 'text-amber-300 font-bold border-b-2 border-amber-400 -mb-[2px]' : ''
           }`}
         >
-          <Eye className="w-3.5 h-3.5 text-red-600" />
+          <Eye className="w-3.5 h-3.5 text-red-400" />
           <span>Sightseeing Places</span>
         </button>
 
         <button
           onClick={() => onSelectTab('hostels')}
-          className={`flex items-center gap-1.5 hover:text-slate-950 transition-colors py-1 ${
-            activeTab === 'hostels' ? 'text-slate-950 font-bold border-b-2 border-slate-950 -mb-[2px]' : ''
+          className={`flex items-center gap-1.5 hover:text-white transition-colors py-1 ${
+            activeTab === 'hostels' ? 'text-amber-300 font-bold border-b-2 border-amber-400 -mb-[2px]' : ''
           }`}
         >
-          <Bed className="w-3.5 h-3.5 text-emerald-600" />
+          <Bed className="w-3.5 h-3.5 text-emerald-400" />
           <span>Hostels</span>
         </button>
 
         <button
           onClick={() => onSelectTab('airport_taxi')}
-          className={`flex items-center gap-1.5 hover:text-slate-950 transition-colors py-1 ${
-            activeTab === 'airport_taxi' ? 'text-slate-950 font-bold border-b-2 border-slate-950 -mb-[2px]' : ''
+          className={`flex items-center gap-1.5 hover:text-white transition-colors py-1 ${
+            activeTab === 'airport_taxi' ? 'text-amber-300 font-bold border-b-2 border-amber-400 -mb-[2px]' : ''
           }`}
         >
-          <Car className="w-3.5 h-3.5 text-yellow-600" />
+          <Car className="w-3.5 h-3.5 text-yellow-400" />
           <span>Airport Taxis</span>
         </button>
 
         <button
           onClick={() => onSelectTab('filters')}
-          className={`flex items-center gap-1.5 hover:text-slate-950 transition-colors py-1 ${
-            activeTab === 'filters' ? 'text-slate-950 font-bold border-b-2 border-slate-950 -mb-[2px]' : ''
+          className={`flex items-center gap-1.5 hover:text-white transition-colors py-1 ${
+            activeTab === 'filters' ? 'text-amber-300 font-bold border-b-2 border-amber-400 -mb-[2px]' : ''
           }`}
         >
-          <SlidersHorizontal className="w-3.5 h-3.5 text-slate-500" />
+          <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400" />
           <span>Filters & Dates</span>
         </button>
 
         <button
           onClick={() => onSelectTab('itinerary')}
-          className={`flex items-center gap-1.5 hover:text-slate-950 transition-colors py-1 ${
-            activeTab === 'itinerary' ? 'text-slate-950 font-bold border-b-2 border-slate-950 -mb-[2px]' : ''
+          className={`flex items-center gap-1.5 hover:text-white transition-colors py-1 ${
+            activeTab === 'itinerary' ? 'text-amber-300 font-bold border-b-2 border-amber-400 -mb-[2px]' : ''
           }`}
         >
-          <Route className="w-3.5 h-3.5 text-slate-500" />
+          <Route className="w-3.5 h-3.5 text-slate-400" />
           <span>Route Plan</span>
           {itineraryCount > 0 && (
-            <span className="font-mono text-[11px] text-emerald-700 font-bold tabular-nums">
+            <span className="font-mono text-[11px] text-amber-400 font-bold tabular-nums">
               ({itineraryCount})
             </span>
           )}
@@ -120,7 +127,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           type="button"
           onClick={onResetFilters}
-          className="hidden sm:inline-flex px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors"
+          className="hidden sm:inline-flex px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 rounded-lg transition-colors border border-slate-700/60"
         >
           Reset Filters
         </button>
@@ -128,12 +135,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           type="button"
           onClick={onOpenDispatchModal}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 rounded-lg hover:bg-slate-800 transition-colors shadow-xs"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-300 rounded-xl transition-all shadow-md shadow-amber-500/20 active:scale-95"
         >
-          <Luggage className="w-3.5 h-3.5 text-emerald-400" />
+          <Luggage className="w-3.5 h-3.5 text-slate-950" />
           <span>Export Plan</span>
           {itineraryCount > 0 && (
-            <span className="ml-1 px-1.5 py-0.2 bg-emerald-500 text-slate-950 rounded text-[10px] font-bold">
+            <span className="ml-1 px-1.5 py-0.2 bg-slate-950 text-amber-300 rounded text-[10px] font-bold">
               {itineraryCount}
             </span>
           )}

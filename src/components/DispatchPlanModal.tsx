@@ -102,7 +102,8 @@ export const DispatchPlanModal: React.FC<DispatchPlanModalProps> = ({
   };
 
   const handleCopy = () => {
-    const text = `VENTUREWAY LOGISTICS DISPATCH & ITINERARY
+    const text = `SILK WAY LOGISTICS DISPATCH & ITINERARY
+"Experience Uzbekistan Effortlessly"
 Travel Dates: ${filter.departureDate} to ${filter.returnDate} (${totalDays} Days)
 Estimated Total Budget: $${tripBudgetUsd.toLocaleString()} USD (~${tripBudgetUzs.toLocaleString()} UZS at 1 USD = ${exchangeRate.toLocaleString()} UZS)
 
@@ -113,7 +114,8 @@ ${itinerary.map((s, i) => `${i + 1}. ${s.destination.name}, ${s.destination.coun
    - Luggage Forwarding: ${s.destination.luggageForwardingSupported ? 'Available (Hands-free)' : 'Self-managed'}
    - Highlight: ${s.destination.highlight}`).join('\n\n')}
 
-Logistics Manifest Generated via VentureWay Tourism & Logistics Platform.`;
+Logistics Manifest Generated via Silk Way Tourism & Logistics Platform.
+"Experience Uzbekistan Effortlessly"`;
 
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -133,15 +135,20 @@ Logistics Manifest Generated via VentureWay Tourism & Logistics Platform.`;
         {/* Modal Header */}
         <div className="p-4 md:p-6 border-b border-slate-200 flex items-center justify-between bg-slate-50/70">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-xs">
-              <Compass className="w-5 h-5 text-emerald-400" />
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 text-white flex items-center justify-center shadow-xs">
+              <Compass className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Logistics Dispatch Manifest
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-bold text-slate-900">
+                  Logistics Dispatch Manifest
+                </h3>
+                <span className="text-[10px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded uppercase">
+                  Silk Way
+                </span>
+              </div>
               <p className="text-xs text-slate-500">
-                Synchronized Multi-Modal Travel & Currency Dossier
+                Experience Uzbekistan Effortlessly · Travel & Currency Dossier
               </p>
             </div>
           </div>

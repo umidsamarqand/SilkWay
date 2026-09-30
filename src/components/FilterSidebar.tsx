@@ -136,21 +136,21 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   const totalItineraryDays = itinerary.reduce((acc, stop) => acc + stop.days, 0);
 
   return (
-    <div className="w-full lg:w-[38%] xl:w-[36%] h-full flex flex-col bg-white border-l border-slate-200 shadow-sm z-20">
-      {/* Sidebar Header Tabs (1. Hotels, 2. Sightseeing Places, 3. Hostels, 4. Airport Taxis, etc.) */}
-      <div className="flex items-center border-b border-slate-200 bg-slate-50/90 p-1.5 shrink-0 overflow-x-auto gap-1">
+    <div className="w-full lg:w-[38%] xl:w-[36%] h-full flex flex-col bg-[#091124] border-l border-slate-800 text-slate-100 shadow-xl z-20">
+      {/* Sidebar Header Tabs (1. Hotels, 2. Restaurants, 3. Sightseeing Places, 4. Hostels, 5. Airport Taxis, etc.) */}
+      <div className="flex items-center border-b border-slate-800/80 bg-[#0c1838]/95 p-1.5 shrink-0 overflow-x-auto gap-1">
         {/* 1. Hotels */}
         <button
           onClick={() => onSelectTab('hotels')}
-          className={`flex-1 min-w-[76px] py-2 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+          className={`flex-1 min-w-[76px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
             activeTab === 'hotels'
-              ? 'bg-slate-900 text-white shadow-xs font-bold'
-              : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <Building2 className={`w-3.5 h-3.5 ${activeTab === 'hotels' ? 'text-amber-400' : 'text-amber-600'}`} />
+          <Building2 className={`w-3.5 h-3.5 ${activeTab === 'hotels' ? 'text-slate-950' : 'text-amber-400'}`} />
           <span>Hotels</span>
-          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'hotels' ? 'bg-slate-800 text-amber-300' : 'bg-slate-200/80 text-slate-600'}`}>
+          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'hotels' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
             13
           </span>
         </button>
@@ -158,15 +158,15 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {/* 2. Restaurants */}
         <button
           onClick={() => onSelectTab('restaurants')}
-          className={`flex-1 min-w-[100px] py-2 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+          className={`flex-1 min-w-[100px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
             activeTab === 'restaurants'
-              ? 'bg-slate-900 text-white shadow-xs font-bold'
-              : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <UtensilsCrossed className={`w-3.5 h-3.5 ${activeTab === 'restaurants' ? 'text-orange-400' : 'text-orange-600'}`} />
+          <UtensilsCrossed className={`w-3.5 h-3.5 ${activeTab === 'restaurants' ? 'text-slate-950' : 'text-orange-400'}`} />
           <span>Restaurants</span>
-          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'restaurants' ? 'bg-slate-800 text-orange-300' : 'bg-slate-200/80 text-slate-600'}`}>
+          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'restaurants' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
             11
           </span>
         </button>
@@ -174,15 +174,15 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {/* 3. Sightseeing Places */}
         <button
           onClick={() => onSelectTab('sightseeing')}
-          className={`flex-1 min-w-[136px] py-2 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+          className={`flex-1 min-w-[136px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
             activeTab === 'sightseeing'
-              ? 'bg-slate-900 text-white shadow-xs font-bold'
-              : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <Eye className={`w-3.5 h-3.5 ${activeTab === 'sightseeing' ? 'text-red-400' : 'text-red-600'}`} />
+          <Eye className={`w-3.5 h-3.5 ${activeTab === 'sightseeing' ? 'text-slate-950' : 'text-red-400'}`} />
           <span>Sightseeing Places</span>
-          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'sightseeing' ? 'bg-slate-800 text-red-300' : 'bg-slate-200/80 text-slate-600'}`}>
+          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'sightseeing' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
             6
           </span>
         </button>
@@ -190,15 +190,15 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {/* 4. Hostels */}
         <button
           onClick={() => onSelectTab('hostels')}
-          className={`flex-1 min-w-[80px] py-2 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+          className={`flex-1 min-w-[80px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
             activeTab === 'hostels'
-              ? 'bg-slate-900 text-white shadow-xs font-bold'
-              : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <Bed className={`w-3.5 h-3.5 ${activeTab === 'hostels' ? 'text-emerald-400' : 'text-emerald-600'}`} />
+          <Bed className={`w-3.5 h-3.5 ${activeTab === 'hostels' ? 'text-slate-950' : 'text-emerald-400'}`} />
           <span>Hostels</span>
-          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'hostels' ? 'bg-slate-800 text-emerald-300' : 'bg-slate-200/80 text-slate-600'}`}>
+          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'hostels' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
             6
           </span>
         </button>
@@ -206,15 +206,15 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {/* 5. Airport Taxis */}
         <button
           onClick={() => onSelectTab('airport_taxi')}
-          className={`flex-1 min-w-[106px] py-2 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+          className={`flex-1 min-w-[106px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
             activeTab === 'airport_taxi'
-              ? 'bg-slate-900 text-white shadow-xs font-bold'
-              : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <Car className={`w-3.5 h-3.5 ${activeTab === 'airport_taxi' ? 'text-yellow-400' : 'text-yellow-600'}`} />
+          <Car className={`w-3.5 h-3.5 ${activeTab === 'airport_taxi' ? 'text-slate-950' : 'text-yellow-400'}`} />
           <span>Airport Taxis</span>
-          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'airport_taxi' ? 'bg-slate-800 text-yellow-300' : 'bg-slate-200/80 text-slate-600'}`}>
+          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'airport_taxi' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
             4
           </span>
         </button>
@@ -222,29 +222,29 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {/* 6. Filters & Dates */}
         <button
           onClick={() => onSelectTab('filters')}
-          className={`flex-1 min-w-[70px] py-2 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1 whitespace-nowrap ${
+          className={`flex-1 min-w-[70px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1 whitespace-nowrap ${
             activeTab === 'filters'
-              ? 'bg-slate-900 text-white shadow-xs font-bold'
-              : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400" />
+          <SlidersHorizontal className={`w-3.5 h-3.5 ${activeTab === 'filters' ? 'text-slate-950' : 'text-slate-400'}`} />
           <span>Filters</span>
         </button>
 
         {/* 7. Route */}
         <button
           onClick={() => onSelectTab('itinerary')}
-          className={`flex-1 min-w-[74px] py-2 px-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1 whitespace-nowrap ${
+          className={`flex-1 min-w-[74px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1 whitespace-nowrap ${
             activeTab === 'itinerary'
-              ? 'bg-slate-900 text-white shadow-xs font-bold'
-              : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <Luggage className="w-3.5 h-3.5 text-slate-400" />
+          <Luggage className={`w-3.5 h-3.5 ${activeTab === 'itinerary' ? 'text-slate-950' : 'text-slate-400'}`} />
           <span>Route</span>
           {itinerary.length > 0 && (
-            <span className="text-[10px] font-mono px-1 py-0.2 rounded bg-emerald-100 text-emerald-800 font-bold tabular-nums">
+            <span className={`text-[10px] font-mono px-1 py-0.2 rounded font-bold tabular-nums ${activeTab === 'itinerary' ? 'bg-slate-950 text-amber-300' : 'bg-amber-500/20 text-amber-300'}`}>
               {itinerary.length}
             </span>
           )}
@@ -916,53 +916,59 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       </div>
 
       {/* Persistent Bottom Action Bar */}
-      <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
+      <div className="p-3 bg-[#0c1838] border-t border-slate-800 flex items-center justify-between gap-3 shrink-0 shadow-lg">
         <button
           onClick={onResetFilters}
-          className="px-3 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+          className="px-3 py-2 text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl transition-colors border border-transparent hover:border-slate-700"
         >
           Reset Filters
         </button>
 
         <button
           onClick={() => {
-            if (activeTab === 'hotels') onSelectTab('sightseeing');
+            if (activeTab === 'hotels') onSelectTab('restaurants');
+            else if (activeTab === 'restaurants') onSelectTab('sightseeing');
             else if (activeTab === 'sightseeing') onSelectTab('hostels');
             else if (activeTab === 'hostels') onSelectTab('airport_taxi');
             else if (activeTab === 'airport_taxi') onSelectTab('itinerary');
             else if (activeTab === 'filters') onSelectTab('hotels');
             else onOpenDispatchModal();
           }}
-          className="flex-1 py-2 px-4 text-xs font-semibold bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 shadow-xs"
+          className="flex-1 py-2 px-4 text-xs font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-slate-950 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 active:scale-[0.99]"
         >
           {activeTab === 'hotels' ? (
             <>
+              <span>Next: Restaurants & Gastronomy</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
+            </>
+          ) : activeTab === 'restaurants' ? (
+            <>
               <span>Next: Sightseeing Places</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : activeTab === 'sightseeing' ? (
             <>
               <span>Next: Hostels & Backpacker Spots</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : activeTab === 'hostels' ? (
             <>
               <span>Next: Airport Taxi Dispatch</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : activeTab === 'airport_taxi' ? (
             <>
               <span>View Route Plan ({itinerary.length})</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : activeTab === 'filters' ? (
             <>
               <span>Browse Uzbekistan Hotels</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : (
             <>
-              <Share2 className="w-3.5 h-3.5" />
+              <Share2 className="w-3.5 h-3.5 text-slate-950" />
               <span>Export Logistics Manifest</span>
             </>
           )}

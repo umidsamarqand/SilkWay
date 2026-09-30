@@ -207,7 +207,7 @@ export default function App() {
   const itineraryIds = useMemo(() => new Set(itinerary.map(i => i.destination.id)), [itinerary]);
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-50 font-sans">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans">
       {/* Top Bar Navigation */}
       <Navbar
         activeTab={activeTab}
