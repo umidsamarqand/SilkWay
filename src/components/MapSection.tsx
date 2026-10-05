@@ -51,6 +51,8 @@ interface MapSectionProps {
   onToggleUzbekLayer: () => void;
   activeCityDistrict?: CityDistrictInfo | null;
   onClearActiveCityDistrict?: () => void;
+  className?: string;
+  onSwitchToDirectory?: () => void;
 }
 
 // Subcomponent to draw active logistics corridor polylines
@@ -132,7 +134,9 @@ export const MapSection: React.FC<MapSectionProps> = ({
   showUzbekLayer,
   onToggleUzbekLayer,
   activeCityDistrict,
-  onClearActiveCityDistrict
+  onClearActiveCityDistrict,
+  className,
+  onSwitchToDirectory
 }) => {
   const { t } = useLanguage();
   const apiKey = (import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string) || 'AIzaSyCLkCnWwhgBa1R3eZ9Sd9KnlFJzFpG735w';
@@ -165,20 +169,32 @@ export const MapSection: React.FC<MapSectionProps> = ({
   };
 
   return (
-    <div className="w-full lg:w-[62%] xl:w-[64%] h-full relative flex flex-col bg-slate-950 overflow-hidden">
+    <div className={`w-full lg:w-[62%] xl:w-[64%] h-full relative flex-col bg-slate-950 overflow-hidden ${className || 'flex'}`}>
       {/* Top Floating Map Command Bar */}
       <div className="absolute top-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-        {/* Left: Quick Region Filters */}
-        <div className="flex items-center gap-1 bg-[#091124]/95 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-slate-800 shadow-md shadow-slate-950/40 pointer-events-auto">
-          {regionPresets.map((r) => (
+        {/* Left: Mobile Back Button + Quick Region Filters */}
+        <div className="flex items-center gap-1.5 pointer-events-auto">
+          {onSwitchToDirectory && (
             <button
-              key={r.label}
-              onClick={() => onSetCamera(r.center, r.zoom)}
-              className="px-2.5 py-1 text-xs font-semibold text-slate-300 hover:text-amber-300 hover:bg-[#0c1838] rounded-lg transition-colors whitespace-nowrap"
+              onClick={onSwitchToDirectory}
+              className="lg:hidden px-3 py-1.5 text-xs font-bold rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md shadow-amber-500/20 flex items-center gap-1.5 shrink-0 active:scale-95"
             >
-              {r.label}
+              <Building2 className="w-3.5 h-3.5" />
+              <span>{t('mobile.showList', 'Show List')}</span>
             </button>
-          ))}
+          )}
+
+          <div className="hidden sm:flex items-center gap-1 bg-[#091124]/95 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-slate-800 shadow-md shadow-slate-950/40 overflow-x-auto scrollbar-none">
+            {regionPresets.map((r) => (
+              <button
+                key={r.label}
+                onClick={() => onSetCamera(r.center, r.zoom)}
+                className="px-2.5 py-1 text-xs font-semibold text-slate-300 hover:text-amber-300 hover:bg-[#0c1838] rounded-lg transition-colors whitespace-nowrap"
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Right: Map Layers & Stats */}

@@ -10,6 +10,7 @@ import {
   CityDistrictInfo
 } from '../types/travel';
 import { CATEGORY_LABELS, TRANSIT_MODE_LABELS } from '../data/destinations';
+import { UZBEKISTAN_POINTS } from '../data/uzbekistanData';
 import { UzbekistanPanel } from './UzbekistanPanel';
 import { useLanguage } from '../context/LanguageContext';
 import { 
@@ -56,6 +57,11 @@ interface FilterSidebarProps {
   onFlyToUzbekPoint: (point: UzbekPoint) => void;
   activeCityDistrict?: CityDistrictInfo | null;
   onZoomToCityOrDistrict?: (item: CityDistrictInfo) => void;
+  className?: string;
+  selectedCity?: string;
+  onSelectCity?: (city: string) => void;
+  selectedDistrictId?: string;
+  onSelectDistrictId?: (id: string) => void;
 }
 
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({
@@ -78,7 +84,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onSelectUzbekPoint,
   onFlyToUzbekPoint,
   activeCityDistrict,
-  onZoomToCityOrDistrict
+  onZoomToCityOrDistrict,
+  className,
+  selectedCity = 'all',
+  onSelectCity,
+  selectedDistrictId = 'all',
+  onSelectDistrictId
 }) => {
   const { t } = useLanguage();
   // Compute trip duration in days
@@ -137,120 +148,69 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   const totalItineraryDays = itinerary.reduce((acc, stop) => acc + stop.days, 0);
 
+  const activePointCount = React.useMemo(() => {
+    const typeMap: Record<string, string> = {
+      hotels: 'hotel',
+      restaurants: 'restaurant',
+      sightseeing: 'place_to_watch',
+      hostels: 'hostel',
+      airport_taxi: 'airport_taxi'
+    };
+    const tKey = typeMap[activeTab];
+    if (!tKey) return 0;
+    return UZBEKISTAN_POINTS.filter(p => p.type === tKey && (!selectedCity || selectedCity === 'all' || p.city === selectedCity)).length;
+  }, [activeTab, selectedCity]);
+
   return (
-    <div className="w-full lg:w-[38%] xl:w-[36%] h-full flex flex-col bg-[#091124] border-l border-slate-800 text-slate-100 shadow-xl z-20">
-      {/* Sidebar Header Tabs (1. Hotels, 2. Restaurants, 3. Sightseeing Places, 4. Hostels, 5. Airport Taxis, etc.) */}
-      <div className="flex items-center border-b border-slate-800/80 bg-[#0c1838]/95 p-1.5 shrink-0 overflow-x-auto gap-1">
-        {/* 1. Hotels */}
-        <button
-          onClick={() => onSelectTab('hotels')}
-          className={`flex-1 min-w-[76px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'hotels'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <Building2 className={`w-3.5 h-3.5 ${activeTab === 'hotels' ? 'text-slate-950' : 'text-amber-400'}`} />
-          <span>{t('nav.hotels', 'Hotels')}</span>
-          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'hotels' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
-            13
-          </span>
-        </button>
+    <div className={`w-full lg:w-[38%] xl:w-[36%] h-full flex-col bg-[#091124] border-l border-slate-800 text-slate-100 shadow-xl z-20 ${className || 'flex'}`}>
+      {/* Active Directory Context Header */}
+      <div className="flex items-center justify-between border-b border-slate-800 bg-[#0a142f] px-4 py-2.5 shrink-0 shadow-sm sticky top-0 z-10">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 text-slate-950 flex items-center justify-center shrink-0 shadow-md shadow-amber-500/20 font-bold">
+            {activeTab === 'hotels' && <Building2 className="w-4 h-4 text-slate-950" />}
+            {activeTab === 'restaurants' && <UtensilsCrossed className="w-4 h-4 text-slate-950" />}
+            {activeTab === 'sightseeing' && <Eye className="w-4 h-4 text-slate-950" />}
+            {activeTab === 'hostels' && <Bed className="w-4 h-4 text-slate-950" />}
+            {activeTab === 'airport_taxi' && <Car className="w-4 h-4 text-slate-950" />}
+            {activeTab === 'filters' && <SlidersHorizontal className="w-4 h-4 text-slate-950" />}
+            {activeTab === 'itinerary' && <Luggage className="w-4 h-4 text-slate-950" />}
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h2 className="text-xs sm:text-sm font-bold text-white tracking-tight truncate">
+                {activeTab === 'hotels' ? t('nav.hotels', 'Hotels')
+                  : activeTab === 'restaurants' ? t('nav.restaurants', 'Restaurants')
+                  : activeTab === 'sightseeing' ? t('nav.sightseeing', 'Sightseeing')
+                  : activeTab === 'hostels' ? t('nav.hostels', 'Hostels')
+                  : activeTab === 'airport_taxi' ? t('nav.taxis', 'Airport Taxis')
+                  : activeTab === 'filters' ? t('nav.filters', 'Filters & Preferences')
+                  : t('nav.route', 'Logistics Route Plan')}
+              </h2>
+              {selectedCity && selectedCity !== 'all' && (
+                <span className="text-[10px] font-semibold text-amber-300 bg-amber-500/20 border border-amber-400/30 px-1.5 py-0.2 rounded shrink-0">
+                  📍 {selectedCity}
+                </span>
+              )}
+            </div>
+            <p className="text-[10px] text-slate-400 truncate">
+              {activeTab === 'itinerary' 
+                ? `${itinerary.length} stops · $${Math.round(totalItineraryCost)} estimated`
+                : activeTab === 'filters'
+                ? t('brand.motto', 'experience uzbekistan effortlessly')
+                : `${activePointCount} verified locations in catalog`}
+            </p>
+          </div>
+        </div>
 
-        {/* 2. Restaurants */}
-        <button
-          onClick={() => onSelectTab('restaurants')}
-          className={`flex-1 min-w-[100px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'restaurants'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <UtensilsCrossed className={`w-3.5 h-3.5 ${activeTab === 'restaurants' ? 'text-slate-950' : 'text-orange-400'}`} />
-          <span>{t('nav.restaurants', 'Restaurants')}</span>
-          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'restaurants' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
-            11
-          </span>
-        </button>
-
-        {/* 3. Sightseeing Places */}
-        <button
-          onClick={() => onSelectTab('sightseeing')}
-          className={`flex-1 min-w-[136px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'sightseeing'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <Eye className={`w-3.5 h-3.5 ${activeTab === 'sightseeing' ? 'text-slate-950' : 'text-red-400'}`} />
-          <span>{t('nav.sightseeing', 'Sightseeing Places')}</span>
-          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'sightseeing' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
-            6
-          </span>
-        </button>
-
-        {/* 4. Hostels */}
-        <button
-          onClick={() => onSelectTab('hostels')}
-          className={`flex-1 min-w-[80px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'hostels'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <Bed className={`w-3.5 h-3.5 ${activeTab === 'hostels' ? 'text-slate-950' : 'text-emerald-400'}`} />
-          <span>{t('nav.hostels', 'Hostels')}</span>
-          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'hostels' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
-            6
-          </span>
-        </button>
-
-        {/* 5. Airport Taxis */}
-        <button
-          onClick={() => onSelectTab('airport_taxi')}
-          className={`flex-1 min-w-[106px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'airport_taxi'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <Car className={`w-3.5 h-3.5 ${activeTab === 'airport_taxi' ? 'text-slate-950' : 'text-yellow-400'}`} />
-          <span>{t('nav.taxis', 'Airport Taxis')}</span>
-          <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'airport_taxi' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
-            4
-          </span>
-        </button>
-
-        {/* 6. Filters & Dates */}
-        <button
-          onClick={() => onSelectTab('filters')}
-          className={`flex-1 min-w-[70px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1 whitespace-nowrap ${
-            activeTab === 'filters'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <SlidersHorizontal className={`w-3.5 h-3.5 ${activeTab === 'filters' ? 'text-slate-950' : 'text-slate-400'}`} />
-          <span>{t('nav.filters', 'Filters')}</span>
-        </button>
-
-        {/* 7. Route */}
-        <button
-          onClick={() => onSelectTab('itinerary')}
-          className={`flex-1 min-w-[74px] py-2 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1 whitespace-nowrap ${
-            activeTab === 'itinerary'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <Luggage className={`w-3.5 h-3.5 ${activeTab === 'itinerary' ? 'text-slate-950' : 'text-slate-400'}`} />
-          <span>{t('nav.route', 'Route')}</span>
-          {itinerary.length > 0 && (
-            <span className={`text-[10px] font-mono px-1 py-0.2 rounded font-bold tabular-nums ${activeTab === 'itinerary' ? 'bg-slate-950 text-amber-300' : 'bg-amber-500/20 text-amber-300'}`}>
-              {itinerary.length}
-            </span>
-          )}
-        </button>
+        {selectedCity && selectedCity !== 'all' && onSelectCity && (
+          <button
+            type="button"
+            onClick={() => onSelectCity('all')}
+            className="text-[10px] text-amber-300/90 hover:text-amber-200 bg-slate-900 border border-slate-700/80 hover:border-amber-400/50 px-2 py-1 rounded-lg transition-colors whitespace-nowrap shrink-0"
+          >
+            {t('location.city.all', 'All Uzbekistan')} ✕
+          </button>
+        )}
       </div>
 
       {/* Main Tab Content Container */}
@@ -259,6 +219,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {activeTab === 'hotels' && (
           <UzbekistanPanel
             activeSubtype="hotel"
+            selectedCity={selectedCity}
+            selectedDistrictId={selectedDistrictId}
+            onSelectDistrictId={onSelectDistrictId}
             onChangeSubtype={(st) => {
               if (st === 'hotel') onSelectTab('hotels');
               else if (st === 'restaurant') onSelectTab('restaurants');
@@ -278,6 +241,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {activeTab === 'restaurants' && (
           <UzbekistanPanel
             activeSubtype="restaurant"
+            selectedCity={selectedCity}
+            selectedDistrictId={selectedDistrictId}
+            onSelectDistrictId={onSelectDistrictId}
             onChangeSubtype={(st) => {
               if (st === 'hotel') onSelectTab('hotels');
               else if (st === 'restaurant') onSelectTab('restaurants');
@@ -297,6 +263,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {activeTab === 'sightseeing' && (
           <UzbekistanPanel
             activeSubtype="place_to_watch"
+            selectedCity={selectedCity}
+            selectedDistrictId={selectedDistrictId}
+            onSelectDistrictId={onSelectDistrictId}
             onChangeSubtype={(st) => {
               if (st === 'hotel') onSelectTab('hotels');
               else if (st === 'restaurant') onSelectTab('restaurants');
@@ -316,6 +285,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {activeTab === 'hostels' && (
           <UzbekistanPanel
             activeSubtype="hostel"
+            selectedCity={selectedCity}
+            selectedDistrictId={selectedDistrictId}
+            onSelectDistrictId={onSelectDistrictId}
             onChangeSubtype={(st) => {
               if (st === 'hotel') onSelectTab('hotels');
               else if (st === 'restaurant') onSelectTab('restaurants');
@@ -335,6 +307,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {activeTab === 'airport_taxi' && (
           <UzbekistanPanel
             activeSubtype="airport_taxi"
+            selectedCity={selectedCity}
+            selectedDistrictId={selectedDistrictId}
+            onSelectDistrictId={onSelectDistrictId}
             onChangeSubtype={(st) => {
               if (st === 'hotel') onSelectTab('hotels');
               else if (st === 'restaurant') onSelectTab('restaurants');
@@ -900,11 +875,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                           </div>
 
                           <button
+                            type="button"
                             onClick={() => onFlyToDestination(stop.destination)}
-                            className="text-[11px] text-blue-600 font-semibold hover:text-blue-800 flex items-center gap-0.5"
+                            className="px-2.5 py-1 text-[11px] font-bold bg-amber-400 text-slate-950 rounded-lg hover:bg-amber-300 flex items-center gap-1 shadow-xs transition-all active:scale-95 shrink-0"
                           >
-                            <span>Map Pin</span>
-                            <ArrowRight className="w-3 h-3" />
+                            <MapPin className="w-3 h-3 text-slate-950" />
+                            <span>{t('results.showOnMap', 'Show on Map')}</span>
                           </button>
                         </div>
                       </div>
@@ -918,10 +894,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       </div>
 
       {/* Persistent Bottom Action Bar */}
-      <div className="p-3 bg-[#0c1838] border-t border-slate-800 flex items-center justify-between gap-3 shrink-0 shadow-lg">
+      <div className="p-3 bg-[#0c1838] border-t border-slate-800 flex items-center justify-between gap-2.5 shrink-0 shadow-lg">
         <button
           onClick={onResetFilters}
-          className="px-3 py-2 text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl transition-colors border border-transparent hover:border-slate-700"
+          className="px-2.5 sm:px-3 py-2 text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl transition-colors border border-transparent hover:border-slate-700 whitespace-nowrap shrink-0"
         >
           {t('action.reset', 'Reset Filters')}
         </button>
@@ -936,42 +912,42 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             else if (activeTab === 'filters') onSelectTab('hotels');
             else onOpenDispatchModal();
           }}
-          className="flex-1 py-2 px-4 text-xs font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-slate-950 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 active:scale-[0.99]"
+          className="flex-1 min-w-0 py-2 px-3 sm:px-4 text-xs font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-slate-950 rounded-xl transition-all flex items-center justify-center gap-1.5 sm:gap-2 shadow-md shadow-amber-500/20 active:scale-[0.99]"
         >
           {activeTab === 'hotels' ? (
             <>
-              <span>{t('action.nextRestaurants', 'Next: Restaurants & Gastronomy')}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
+              <span className="truncate">{t('action.nextRestaurants', 'Next: Restaurants')}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950 shrink-0" />
             </>
           ) : activeTab === 'restaurants' ? (
             <>
-              <span>{t('action.nextSightseeing', 'Next: Sightseeing Places')}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
+              <span className="truncate">{t('action.nextSightseeing', 'Next: Sightseeing')}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950 shrink-0" />
             </>
           ) : activeTab === 'sightseeing' ? (
             <>
-              <span>{t('action.nextHostels', 'Next: Hostels & Backpacker Spots')}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
+              <span className="truncate">{t('action.nextHostels', 'Next: Hostels')}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950 shrink-0" />
             </>
           ) : activeTab === 'hostels' ? (
             <>
-              <span>{t('action.nextTaxis', 'Next: Airport Taxi Dispatch')}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
+              <span className="truncate">{t('action.nextTaxis', 'Next: Airport Taxis')}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950 shrink-0" />
             </>
           ) : activeTab === 'airport_taxi' ? (
             <>
-              <span>{t('action.viewRoute', 'View Route Plan')} ({itinerary.length})</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
+              <span className="truncate">{t('action.viewRoute', 'View Route Plan')} ({itinerary.length})</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950 shrink-0" />
             </>
           ) : activeTab === 'filters' ? (
             <>
-              <span>{t('action.browseHotels', 'Browse Uzbekistan Hotels')}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
+              <span className="truncate">{t('action.browseHotels', 'Browse Uzbekistan Hotels')}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950 shrink-0" />
             </>
           ) : (
             <>
-              <Share2 className="w-3.5 h-3.5 text-slate-950" />
-              <span>{t('action.exportManifest', 'Export Logistics Manifest')}</span>
+              <Share2 className="w-3.5 h-3.5 text-slate-950 shrink-0" />
+              <span className="truncate">{t('action.exportManifest', 'Export Logistics Manifest')}</span>
             </>
           )}
         </button>

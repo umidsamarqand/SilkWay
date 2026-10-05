@@ -32,6 +32,9 @@ interface UzbekistanPanelProps {
   onChangeSubtype?: (type: UzbekPointType | 'all') => void;
   activeCityDistrict?: CityDistrictInfo | null;
   onZoomToCityOrDistrict?: (item: CityDistrictInfo) => void;
+  selectedCity?: string;
+  selectedDistrictId?: string;
+  onSelectDistrictId?: (id: string) => void;
 }
 
 const SERVICE_KEYS = ['pool', 'rooftop', 'breakfast', 'wifi', 'airport_shuttle', 'ac', 'cards', 'parking', 'spa', 'vegetarian'] as const;
@@ -58,7 +61,10 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
   activeSubtype: externalSubtype,
   onChangeSubtype,
   activeCityDistrict,
-  onZoomToCityOrDistrict
+  onZoomToCityOrDistrict,
+  selectedCity: externalCity,
+  selectedDistrictId: externalDistrictId,
+  onSelectDistrictId
 }) => {
   const { t, language } = useLanguage();
   const [internalSubtype, setInternalSubtype] = useState<UzbekPointType | 'all'>('all');
@@ -71,8 +77,12 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
     }
   };
 
-  const [selectedCity, setSelectedCity] = useState<string>('all');
-  const [selectedDistrictId, setSelectedDistrictId] = useState<string>(activeCityDistrict ? activeCityDistrict.id : 'all');
+  const [internalCity, setInternalCity] = useState<string>('all');
+  const activeCity = externalCity !== undefined ? externalCity : internalCity;
+
+  const [internalDistrictId, setInternalDistrictId] = useState<string>(activeCityDistrict ? activeCityDistrict.id : 'all');
+  const activeDistrictId = externalDistrictId !== undefined ? externalDistrictId : internalDistrictId;
+
   const [showTaxiModal, setShowTaxiModal] = useState<boolean>(false);
   const [bookings, setBookings] = useState<TaxiBooking[]>(INITIAL_TAXI_BOOKINGS);
 
@@ -83,20 +93,21 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<'rating' | 'popular' | 'stars' | 'price_low' | 'price_high'>('rating');
 
-  const mainCities = UZBEK_CITIES_AND_DISTRICTS.filter(d => !d.isDistrict);
-  const availableDistricts = selectedCity === 'all'
+  const availableDistricts = activeCity === 'all'
     ? UZBEK_CITIES_AND_DISTRICTS.filter(d => d.isDistrict)
-    : UZBEK_CITIES_AND_DISTRICTS.filter(d => d.isDistrict && d.cityName === selectedCity);
+    : UZBEK_CITIES_AND_DISTRICTS.filter(d => d.isDistrict && d.cityName === activeCity);
 
-  const handleSelectLocation = (loc: (typeof UZBEK_CITIES_AND_DISTRICTS)[0]) => {
-    setSelectedDistrictId(loc.id);
-    if (loc.id === 'all') {
-      setSelectedCity('all');
+  const handleSelectDistrict = (id: string, distObj?: (typeof UZBEK_CITIES_AND_DISTRICTS)[0]) => {
+    if (onSelectDistrictId) {
+      onSelectDistrictId(id);
     } else {
-      setSelectedCity(loc.cityName);
+      setInternalDistrictId(id);
     }
-    if (onZoomToCityOrDistrict) {
-      onZoomToCityOrDistrict(loc);
+    if (distObj && onZoomToCityOrDistrict) {
+      onZoomToCityOrDistrict(distObj);
+    } else if (id === 'all' && onZoomToCityOrDistrict) {
+      const allObj = UZBEK_CITIES_AND_DISTRICTS.find(d => d.id === 'all');
+      if (allObj) onZoomToCityOrDistrict(allObj);
     }
   };
 
@@ -120,11 +131,11 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
       if (activeSubtype !== 'all' && p.type !== activeSubtype) return false;
 
       // 2. City
-      if (selectedCity !== 'all' && p.city !== selectedCity) return false;
+      if (activeCity !== 'all' && p.city !== activeCity) return false;
 
       // 3. District
-      if (selectedDistrictId !== 'all') {
-        const activeDist = UZBEK_CITIES_AND_DISTRICTS.find(d => d.id === selectedDistrictId);
+      if (activeDistrictId !== 'all') {
+        const activeDist = UZBEK_CITIES_AND_DISTRICTS.find(d => d.id === activeDistrictId);
         if (activeDist && activeDist.isDistrict) {
           const kw = activeDist.name.toLowerCase().split(' ')[0];
           const matches = 
@@ -192,7 +203,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
     });
 
     return list;
-  }, [activeSubtype, selectedCity, selectedDistrictId, selectedStar, selectedServices, selectedCuisine, searchQuery, sortBy]);
+  }, [activeSubtype, activeCity, activeDistrictId, selectedStar, selectedServices, selectedCuisine, searchQuery, sortBy]);
 
   const getSubtypeCount = (type: UzbekPointType) => {
     return UZBEKISTAN_POINTS.filter(p => p.type === type).length;
@@ -284,163 +295,54 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         </div>
       </div>
 
-      {/* Sub-Category Segmented Filter */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 p-1.5 bg-[#0c1838]/90 border border-slate-800/80 rounded-2xl shadow-sm">
-        {/* 1. Hotels */}
-        <button
-          onClick={() => setActiveSubtype('hotel')}
-          className={`py-1.5 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-            activeSubtype === 'hotel'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <Building2 className={`w-3.5 h-3.5 ${activeSubtype === 'hotel' ? 'text-slate-950' : 'text-amber-400'}`} />
-          <span>{t('cat.hotels', 'Hotels')} ({getSubtypeCount('hotel')})</span>
-        </button>
-
-        {/* 2. Restaurants */}
-        <button
-          onClick={() => setActiveSubtype('restaurant')}
-          className={`py-1.5 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-            activeSubtype === 'restaurant'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <UtensilsCrossed className={`w-3.5 h-3.5 ${activeSubtype === 'restaurant' ? 'text-slate-950' : 'text-orange-400'}`} />
-          <span>{t('cat.restaurants', 'Restaurants')} ({getSubtypeCount('restaurant')})</span>
-        </button>
-
-        {/* 3. Hostels */}
-        <button
-          onClick={() => setActiveSubtype('hostel')}
-          className={`py-1.5 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-            activeSubtype === 'hostel'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <Bed className={`w-3.5 h-3.5 ${activeSubtype === 'hostel' ? 'text-slate-950' : 'text-emerald-400'}`} />
-          <span>{t('cat.hostels', 'Hostels')} ({getSubtypeCount('hostel')})</span>
-        </button>
-
-        {/* 4. Places to Watch */}
-        <button
-          onClick={() => setActiveSubtype('place_to_watch')}
-          className={`py-1.5 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-            activeSubtype === 'place_to_watch'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <Eye className={`w-3.5 h-3.5 ${activeSubtype === 'place_to_watch' ? 'text-slate-950' : 'text-red-400'}`} />
-          <span>{t('cat.sightseeing', 'Sightseeing')} ({getSubtypeCount('place_to_watch')})</span>
-        </button>
-
-        {/* 5. Airport Taxis */}
-        <button
-          onClick={() => setActiveSubtype('airport_taxi')}
-          className={`py-1.5 px-2 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 col-span-2 sm:col-span-1 ${
-            activeSubtype === 'airport_taxi'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <Car className={`w-3.5 h-3.5 ${activeSubtype === 'airport_taxi' ? 'text-slate-950' : 'text-yellow-400'}`} />
-          <span>{t('cat.taxis', 'Taxis')} ({getSubtypeCount('airport_taxi')})</span>
-        </button>
-      </div>
-
-      {/* City & District Interactive Zoom & Mark Selector */}
-      <div className="p-3.5 bg-[#0c1838]/85 rounded-2xl border border-slate-800/80 shadow-lg space-y-2.5 text-white">
+      {/* Historic Districts & Quarters of Active City */}
+      <div className="p-3 bg-[#0c1838]/85 rounded-2xl border border-slate-800/80 shadow-md space-y-2 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-xs font-bold text-white">
             <MapPin className="w-3.5 h-3.5 text-amber-400" />
-            <span>{t('location.selectTitle', 'Select City or District to Zoom & Mark')}</span>
-          </div>
-          {selectedDistrictId !== 'all' ? (
-            <span className="text-[10px] font-bold text-amber-950 bg-amber-400 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping" />
-              <span>{t('location.markedAndZoomed', 'Marked & Zoomed')}</span>
+            <span>
+              {activeCity !== 'all' 
+                ? `${t('location.keyDistricts', 'Historic Districts')}: ${activeCity}` 
+                : t('location.allUzbekistan', 'All Uzbekistan Directory Active')}
             </span>
+          </div>
+          {activeDistrictId !== 'all' ? (
+            <button
+              type="button"
+              onClick={() => handleSelectDistrict('all')}
+              className="text-[10px] font-bold text-amber-950 bg-amber-400 hover:bg-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs transition-colors"
+            >
+              <span>{t('amenities.clear', 'Clear')} ✕</span>
+            </button>
           ) : (
-            <span className="text-[10px] text-slate-400 flex items-center gap-1">
-              <ZoomIn className="w-3 h-3 text-slate-400" />
-              <span>{t('location.clickToZoom', 'Click to fly & pinpoint')}</span>
+            <span className="text-[10px] text-slate-400 font-mono">
+              {availableDistricts.length > 0 ? `${availableDistricts.length} historic quarters` : t('hero.activeDirectory', 'Full Directory Active')}
             </span>
           )}
         </div>
 
-        {/* 1. Main City Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-          {mainCities.map((city) => {
-            const isSelected = selectedCity === city.cityName && (selectedDistrictId === 'all' || selectedDistrictId === city.id);
-            const localizedCityName = city.cityName === 'all' 
-              ? t('location.allUzbekistan', 'All Uzbekistan') 
-              : city.cityName === 'Samarkand' ? t('location.city.samarkand', 'Samarkand')
-              : city.cityName === 'Bukhara' ? t('location.city.bukhara', 'Bukhara')
-              : city.cityName === 'Khiva' ? t('location.city.khiva', 'Khiva')
-              : city.cityName === 'Tashkent' ? t('location.city.tashkent', 'Tashkent')
-              : city.cityName === 'Zaamin' ? t('location.city.zaamin', 'Zaamin')
-              : city.name;
-
-            return (
-              <button
-                key={city.id}
-                onClick={() => handleSelectLocation(city)}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-xl transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
-                  isSelected
-                    ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20 ring-1 ring-amber-400'
-                    : 'bg-slate-900/90 text-slate-300 border border-slate-700/60 hover:bg-slate-800 hover:text-white hover:border-slate-600'
-                }`}
-              >
-                <span>{localizedCityName}</span>
-                <span className={`text-[10px] font-mono px-1 py-0.2 rounded ${
-                  isSelected ? 'bg-slate-950 text-amber-300' : 'bg-slate-800 text-slate-400'
-                }`}>
-                  {city.cityName === 'all' 
-                    ? UZBEKISTAN_POINTS.length 
-                    : UZBEKISTAN_POINTS.filter(p => p.city === city.cityName).length}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* 2. Historic Districts & Quarters Pills */}
         {availableDistricts.length > 0 && (
-          <div className="pt-2 border-t border-slate-800/80">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider flex items-center gap-1">
-                <span>{t('location.keyDistricts', '📍 Key Historic Districts & Quarters:')}</span>
-              </span>
-              <span className="text-[10px] text-slate-400 font-mono">
-                {t('location.tapToZoom', 'Tap to zoom 15x')}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-              {availableDistricts.map((dist) => {
-                const isDistActive = selectedDistrictId === dist.id;
-                return (
-                  <button
-                    key={dist.id}
-                    onClick={() => handleSelectLocation(dist)}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-all whitespace-nowrap flex items-center gap-1 shrink-0 ${
-                      isDistActive
-                        ? 'bg-amber-400 text-slate-950 font-bold shadow-xs ring-2 ring-amber-300'
-                        : 'bg-slate-900/80 text-slate-300 border border-slate-700/60 hover:bg-slate-800 hover:text-white'
-                    }`}
-                  >
-                    <span>{dist.name}</span>
-                    <span className="text-[10px] text-slate-400 font-mono">
-                      · {dist.cityName}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none pt-1">
+            {availableDistricts.map((dist) => {
+              const isDistActive = activeDistrictId === dist.id;
+              return (
+                <button
+                  key={dist.id}
+                  type="button"
+                  onClick={() => handleSelectDistrict(dist.id, dist)}
+                  className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-all whitespace-nowrap flex items-center gap-1 shrink-0 ${
+                    isDistActive
+                      ? 'bg-amber-400 text-slate-950 font-bold shadow-xs ring-2 ring-amber-300'
+                      : 'bg-slate-900/80 text-slate-300 border border-slate-700/60 hover:bg-slate-800 hover:text-white'
+                  }`}
+                >
+                  <span>{dist.name}</span>
+                  <span className="text-[10px] text-slate-400 font-mono">
+                    · {dist.cityName}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         )}
       </div>
@@ -591,7 +493,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
           <span>
             {t('results.showing', 'Showing')} <strong className="text-white">{filteredAndRankedPoints.length}</strong> {t('results.verifiedSpots', 'verified spots')}
-            {selectedCity !== 'all' && ` ${t('results.inCity', 'in')} ${selectedCity}`}
+            {activeCity !== 'all' && ` ${t('results.inCity', 'in')} ${activeCity}`}
           </span>
           {(selectedStar !== 'all' || selectedServices.length > 0 || selectedCuisine !== 'all' || searchQuery) && (
             <button
@@ -656,8 +558,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 setSelectedServices([]);
                 setSelectedCuisine('all');
                 setSearchQuery('');
-                setSelectedCity('all');
-                setSelectedDistrictId('all');
+                handleSelectDistrict('all');
               }}
               className="mt-2 px-3 py-1.5 text-xs font-bold bg-amber-400 text-slate-950 rounded-xl hover:bg-amber-300 shadow-md shadow-amber-500/20"
             >
@@ -794,20 +695,22 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                       <strong className="text-amber-300">Logistics & Tips:</strong> {point.logisticsNote}
                     </div>
 
-                    <div className="flex items-center justify-between pt-1 border-t border-slate-800/80">
-                      <span className="text-[10px] text-slate-400 truncate max-w-[170px]">
-                        {point.address}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-800/80 mt-1">
+                      <span className="text-[11px] text-slate-400 truncate max-w-full sm:max-w-[180px]" title={point.address}>
+                        📍 {point.address}
                       </span>
 
                       <button
+                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
+                          onSelectPoint(point);
                           onFlyToPoint(point);
                         }}
-                        className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
+                        className="w-full sm:w-auto px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-300 text-slate-950 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95 shrink-0"
                       >
-                        <Navigation className="w-3 h-3" />
-                        <span>{t('results.flyTo', 'Pin on Map')}</span>
+                        <MapPin className="w-3.5 h-3.5 text-slate-950 shrink-0" />
+                        <span className="whitespace-nowrap">{t('results.showOnMap', 'Show on Map')}</span>
                       </button>
                     </div>
                   </div>

@@ -4,10 +4,15 @@ import { MapSection } from './components/MapSection';
 import { FilterSidebar } from './components/FilterSidebar';
 import { DispatchPlanModal } from './components/DispatchPlanModal';
 import { DESTINATIONS, LOGISTICS_CORRIDORS } from './data/destinations';
-import { UZBEKISTAN_POINTS } from './data/uzbekistanData';
+import { UZBEKISTAN_POINTS, UZBEK_CITIES_AND_DISTRICTS } from './data/uzbekistanData';
 import { Destination, FilterState, ItineraryStop, UzbekPoint, SidebarTab, CityDistrictInfo } from './types/travel';
+import { useLanguage } from './context/LanguageContext';
+import { Building2, Compass } from 'lucide-react';
 
 export default function App() {
+  const { t } = useLanguage();
+  const [mobileTab, setMobileTab] = useState<'directory' | 'map'>('directory');
+
   // Initial Filter State
   const [filter, setFilter] = useState<FilterState>({
     searchQuery: '',
@@ -31,6 +36,8 @@ export default function App() {
   const [selectedUzbekPoint, setSelectedUzbekPoint] = useState<UzbekPoint | null>(null);
   const [showUzbekLayer, setShowUzbekLayer] = useState<boolean>(true);
   const [activeCityDistrict, setActiveCityDistrict] = useState<CityDistrictInfo | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string>('all');
+  const [selectedDistrictId, setSelectedDistrictId] = useState<string>('all');
 
   // Map camera state focused on Uzbekistan
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({ lat: 40.2, lng: 65.5 });
@@ -148,13 +155,15 @@ export default function App() {
     setMapCenter(dest.coordinates);
     setMapZoom(7);
     setSelectedDestination(dest);
+    setMobileTab('map');
   };
 
   const handleFlyToUzbekPoint = (point: UzbekPoint) => {
     setMapCenter(point.coordinates);
-    setMapZoom(13);
+    setMapZoom(14.5);
     setSelectedUzbekPoint(point);
     setShowUzbekLayer(true);
+    setMobileTab('map');
   };
 
   const handleSetCamera = (center: { lat: number; lng: number }, zoom: number) => {
@@ -168,6 +177,23 @@ export default function App() {
     if (tab === 'hotels' || tab === 'sightseeing' || tab === 'hostels' || tab === 'airport_taxi') {
       setMapCenter({ lat: 40.2, lng: 65.5 });
       setMapZoom(6.8);
+    }
+  };
+
+  const handleSelectCity = (cityName: string) => {
+    setSelectedCity(cityName);
+    setSelectedDistrictId('all');
+    setActiveCityDistrict(null);
+    setShowUzbekLayer(true);
+    if (cityName === 'all') {
+      setMapCenter({ lat: 40.2, lng: 65.5 });
+      setMapZoom(6.8);
+    } else {
+      const cityObj = UZBEK_CITIES_AND_DISTRICTS.find(d => !d.isDistrict && d.cityName === cityName);
+      if (cityObj) {
+        setMapCenter(cityObj.coordinates);
+        setMapZoom(cityObj.zoom);
+      }
     }
   };
 
@@ -200,6 +226,8 @@ export default function App() {
     setSelectedDestination(null);
     setSelectedUzbekPoint(null);
     setActiveCityDistrict(null);
+    setSelectedCity('all');
+    setSelectedDistrictId('all');
     setMapCenter({ lat: 40.2, lng: 65.5 });
     setMapZoom(6.8);
   };
@@ -216,12 +244,16 @@ export default function App() {
         matchedCount={filteredDestinations.length}
         onOpenDispatchModal={() => setIsDispatchModalOpen(true)}
         onResetFilters={handleResetFilters}
+        selectedCity={selectedCity}
+        onSelectCity={handleSelectCity}
       />
 
       {/* Main Split Layout: 60-65% Map on Left, 35-40% Filter Interface on Right */}
-      <main className="flex-1 flex flex-col lg:flex-row w-full h-[calc(100vh-4rem)] overflow-hidden">
+      <main className="flex-1 flex flex-col lg:flex-row w-full h-[calc(100vh-4rem)] overflow-hidden relative">
         {/* Left Side: 60-65% Map Canvas */}
         <MapSection
+          className={mobileTab === 'map' ? 'flex' : 'hidden lg:flex'}
+          onSwitchToDirectory={() => setMobileTab('directory')}
           destinations={filteredDestinations}
           allDestinations={DESTINATIONS}
           selectedDestination={selectedDestination}
@@ -245,6 +277,7 @@ export default function App() {
 
         {/* Right Side: 35-40% Filter & Itinerary Interface */}
         <FilterSidebar
+          className={mobileTab === 'directory' ? 'flex' : 'hidden lg:flex'}
           filter={filter}
           onFilterChange={setFilter}
           destinations={filteredDestinations}
@@ -265,7 +298,41 @@ export default function App() {
           onFlyToUzbekPoint={handleFlyToUzbekPoint}
           activeCityDistrict={activeCityDistrict}
           onZoomToCityOrDistrict={handleZoomToCityOrDistrict}
+          selectedCity={selectedCity}
+          onSelectCity={handleSelectCity}
+          selectedDistrictId={selectedDistrictId}
+          onSelectDistrictId={setSelectedDistrictId}
         />
+
+        {/* Mobile View Toggle Pill (Only on screens < lg) */}
+        <div className="lg:hidden fixed bottom-18 left-1/2 -translate-x-1/2 z-40 pointer-events-auto">
+          <div className="flex items-center p-1 bg-[#0c1838]/95 backdrop-blur-md rounded-full border border-slate-700/80 shadow-2xl shadow-black/80 ring-1 ring-amber-400/40">
+            <button
+              type="button"
+              onClick={() => setMobileTab('directory')}
+              className={`px-3.5 py-1.5 text-xs rounded-full font-bold transition-all flex items-center gap-1.5 ${
+                mobileTab === 'directory'
+                  ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              <span>{t('mobile.list', 'Directory')}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileTab('map')}
+              className={`px-3.5 py-1.5 text-xs rounded-full font-bold transition-all flex items-center gap-1.5 ${
+                mobileTab === 'map'
+                  ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              <Compass className="w-3.5 h-3.5" />
+              <span>{t('mobile.map', 'Map')}</span>
+            </button>
+          </div>
+        </div>
       </main>
 
       {/* Logistics Dispatch Sheet Modal */}
