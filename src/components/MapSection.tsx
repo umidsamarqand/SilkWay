@@ -29,6 +29,7 @@ import {
   Phone
 } from 'lucide-react';
 import { UzbekPoint, CityDistrictInfo } from '../types/travel';
+import { useLanguage } from '../context/LanguageContext';
 
 interface MapSectionProps {
   destinations: Destination[];
@@ -133,6 +134,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
   activeCityDistrict,
   onClearActiveCityDistrict
 }) => {
+  const { t } = useLanguage();
   const apiKey = (import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string) || 'AIzaSyCLkCnWwhgBa1R3eZ9Sd9KnlFJzFpG735w';
   const [activeCorridorId, setActiveCorridorId] = useState<string | undefined>(undefined);
   const [showCorridorList, setShowCorridorList] = useState(false);
@@ -140,12 +142,12 @@ export const MapSection: React.FC<MapSectionProps> = ({
 
   // Quick region jump presets for Uzbekistan
   const regionPresets = [
-    { label: '🇺🇿 All Uzbekistan', center: { lat: 40.2, lng: 65.5 }, zoom: 6.5 },
-    { label: '🏛️ Samarkand', center: { lat: 39.6542, lng: 66.9597 }, zoom: 12.5 },
-    { label: '🕌 Bukhara', center: { lat: 39.7747, lng: 64.4286 }, zoom: 13.0 },
-    { label: '🏰 Khiva', center: { lat: 41.3783, lng: 60.3594 }, zoom: 13.5 },
-    { label: '🏙️ Tashkent', center: { lat: 41.3110, lng: 69.2405 }, zoom: 12.0 },
-    { label: '🏔️ Zaamin & Chimgan', center: { lat: 41.1, lng: 69.4 }, zoom: 8.5 }
+    { label: t('location.allUzbekistan', '🇺🇿 All Uzbekistan'), center: { lat: 40.2, lng: 65.5 }, zoom: 6.5 },
+    { label: `🏛️ ${t('location.city.samarkand', 'Samarkand')}`, center: { lat: 39.6542, lng: 66.9597 }, zoom: 12.5 },
+    { label: `🕌 ${t('location.city.bukhara', 'Bukhara')}`, center: { lat: 39.7747, lng: 64.4286 }, zoom: 13.0 },
+    { label: `🏰 ${t('location.city.khiva', 'Khiva')}`, center: { lat: 41.3783, lng: 60.3594 }, zoom: 13.5 },
+    { label: `🏙️ ${t('location.city.tashkent', 'Tashkent')}`, center: { lat: 41.3110, lng: 69.2405 }, zoom: 12.0 },
+    { label: `🏔️ ${t('location.city.zaamin', 'Zaamin')} & Chimgan`, center: { lat: 41.1, lng: 69.4 }, zoom: 8.5 }
   ];
 
   const displayedDestinations = showAllHubs ? allDestinations : destinations;
@@ -189,7 +191,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
                 : 'bg-[#091124]/90 text-slate-300 border-slate-700/80 hover:bg-slate-800 hover:text-white'
             }`}
           >
-            <span>🇺🇿 Uzbekistan Directory ({uzbekPoints.length})</span>
+            <span>{t('map.uzbekDirectory', '🇺🇿 Uzbekistan Directory')} ({uzbekPoints.length})</span>
           </button>
 
           <button
@@ -201,7 +203,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>{showAllHubs ? 'All Global Hubs' : `Matched (${destinations.length})`}</span>
+            <span>{showAllHubs ? t('map.allHubs', 'All Global Hubs') : `${t('map.matched', 'Matched')} (${destinations.length})`}</span>
           </button>
 
           <button
@@ -213,7 +215,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
             }`}
           >
             <Train className="w-3.5 h-3.5" />
-            <span>Corridors ({corridors.length})</span>
+            <span>{t('map.corridors', 'Corridors')} ({corridors.length})</span>
           </button>
         </div>
       </div>
@@ -223,13 +225,13 @@ export const MapSection: React.FC<MapSectionProps> = ({
         <div className="absolute top-14 right-3 z-20 w-80 bg-[#0c1838]/98 backdrop-blur-md rounded-2xl border border-slate-800 shadow-2xl p-3.5 max-h-96 overflow-y-auto text-slate-100">
           <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
             <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
-              Transit Corridors
+              {t('map.transitCorridors', 'Transit Corridors')}
             </span>
             <button 
               onClick={() => setActiveCorridorId(undefined)}
               className="text-[11px] text-slate-400 hover:text-white"
             >
-              Reset Highlights
+              {t('map.resetHighlights', 'Reset highlights')}
             </button>
           </div>
           <div className="space-y-2">
@@ -566,27 +568,27 @@ export const MapSection: React.FC<MapSectionProps> = ({
         <div className="flex items-center gap-3 text-xs">
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-blue-500 inline-block shadow-xs"></span>
-            <span className="text-slate-300">Matched Hub</span>
+            <span className="text-slate-300">{t('map.legend.matchedHub', 'Matched Hub')}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-amber-400 inline-block shadow-xs"></span>
-            <span className="text-slate-300">Hotels</span>
+            <span className="text-slate-300">{t('map.legend.hotels', 'Hotels')}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-orange-500 inline-block shadow-xs"></span>
-            <span className="text-slate-300">Restaurants</span>
+            <span className="text-slate-300">{t('map.legend.restaurants', 'Restaurants')}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-emerald-400 inline-block shadow-xs"></span>
-            <span className="text-slate-300">Hostels</span>
+            <span className="text-slate-300">{t('map.legend.hostels', 'Hostels')}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-red-500 inline-block shadow-xs"></span>
-            <span className="text-slate-300">Sightseeing</span>
+            <span className="text-slate-300">{t('map.legend.sightseeing', 'Sightseeing')}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-yellow-400 inline-block shadow-xs"></span>
-            <span className="text-slate-300">Taxis</span>
+            <span className="text-slate-300">{t('map.legend.taxis', 'Taxis')}</span>
           </div>
         </div>
 
@@ -599,7 +601,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
               mapType === 'roadmap' ? 'bg-amber-400 text-slate-950 font-bold shadow-xs' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Vector
+            {t('map.vector', 'Vector')}
           </button>
           <button
             onClick={() => setMapType('terrain')}
@@ -607,7 +609,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
               mapType === 'terrain' ? 'bg-amber-400 text-slate-950 font-bold shadow-xs' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Terrain
+            {t('map.terrain', 'Terrain')}
           </button>
           <button
             onClick={() => setMapType('satellite')}
@@ -615,7 +617,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
               mapType === 'satellite' ? 'bg-amber-400 text-slate-950 font-bold shadow-xs' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Satellite
+            {t('map.satellite', 'Satellite')}
           </button>
         </div>
       </div>

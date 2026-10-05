@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ItineraryStop, FilterState } from '../types/travel';
+import { useLanguage } from '../context/LanguageContext';
 import { 
   X, 
   Printer, 
@@ -32,6 +33,7 @@ export const DispatchPlanModal: React.FC<DispatchPlanModalProps> = ({
   itinerary,
   filter
 }) => {
+  const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const [copiedUzs, setCopiedUzs] = useState(false);
 
@@ -141,14 +143,14 @@ Logistics Manifest Generated via Silk Way Tourism & Logistics Platform.
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-bold text-slate-900">
-                  Logistics Dispatch Manifest
+                  {t('dispatch.title', 'Logistics Dispatch Manifest')}
                 </h3>
                 <span className="text-[10px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded uppercase">
-                  Silk Way
+                  {t('brand.name', 'Silk Way')}
                 </span>
               </div>
               <p className="text-xs text-slate-500">
-                Experience Uzbekistan Effortlessly · Travel & Currency Dossier
+                {t('dispatch.subtitle', 'Experience Uzbekistan Effortlessly · Travel & Currency Dossier')}
               </p>
             </div>
           </div>
@@ -166,21 +168,21 @@ Logistics Manifest Generated via Silk Way Tourism & Logistics Platform.
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-slate-900 text-white rounded-xl">
             <div>
-              <span className="text-[11px] text-slate-400 block mb-0.5">Duration</span>
+              <span className="text-[11px] text-slate-400 block mb-0.5">{t('itinerary.duration', 'Duration')}</span>
               <span className="text-sm font-bold font-mono tabular-nums">{totalDays} Days</span>
             </div>
             <div>
-              <span className="text-[11px] text-slate-400 block mb-0.5">Destinations</span>
+              <span className="text-[11px] text-slate-400 block mb-0.5">{t('itinerary.destinations', 'Destinations')}</span>
               <span className="text-sm font-bold font-mono tabular-nums">{itinerary.length} Hubs</span>
             </div>
             <div>
-              <span className="text-[11px] text-slate-400 block mb-0.5">Est. Budget (USD)</span>
+              <span className="text-[11px] text-slate-400 block mb-0.5">{t('itinerary.budgetUsd', 'Est. Budget (USD)')}</span>
               <span className="text-sm font-bold font-mono text-emerald-400 tabular-nums">
                 ${tripBudgetUsd.toLocaleString()}
               </span>
             </div>
             <div>
-              <span className="text-[11px] text-slate-400 block mb-0.5">Est. Budget (UZS)</span>
+              <span className="text-[11px] text-slate-400 block mb-0.5">{t('itinerary.budgetUzs', 'Est. Budget (UZS)')}</span>
               <span className="text-xs font-bold font-mono text-amber-300 tabular-nums">
                 ~{tripBudgetUzs.toLocaleString()} UZS
               </span>
@@ -196,13 +198,13 @@ Logistics Manifest Generated via Silk Way Tourism & Logistics Platform.
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-slate-950 flex items-center gap-1.5">
-                    <span>Currency Converter (USD ⇄ UZS)</span>
+                    <span>{t('dispatch.converterTitle', 'Currency Converter (USD ⇄ UZS)')}</span>
                     <span className="text-[10px] font-mono font-semibold bg-amber-200/80 text-amber-900 px-1.5 py-0.2 rounded">
                       Live Market
                     </span>
                   </h4>
                   <p className="text-[11px] text-slate-500">
-                    Real-time market rate: <strong className="text-slate-800">1 USD = {exchangeRate.toLocaleString()} UZS</strong> (Central Bank of Uzbekistan benchmark)
+                    {t('dispatch.converterDesc', `Real-time market rate: 1 USD = ${exchangeRate.toLocaleString()} UZS (Central Bank of Uzbekistan benchmark)`)}
                   </p>
                 </div>
               </div>
@@ -405,7 +407,7 @@ Logistics Manifest Generated via Silk Way Tourism & Logistics Platform.
             onClick={onClose}
             className="px-4 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-200/60 transition-colors"
           >
-            Close
+            {t('dispatch.close', 'Close')}
           </button>
 
           <div className="flex items-center gap-2">
@@ -416,12 +418,12 @@ Logistics Manifest Generated via Silk Way Tourism & Logistics Platform.
               {copied ? (
                 <>
                   <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Copied!</span>
+                  <span>{t('dispatch.copied', 'Copied!')}</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Copy Text (USD & UZS)</span>
+                  <span>{t('dispatch.copyManifest', 'Copy Text (USD & UZS)')}</span>
                 </>
               )}
             </button>
@@ -431,7 +433,7 @@ Logistics Manifest Generated via Silk Way Tourism & Logistics Platform.
               className="px-4 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5 shadow-xs"
             >
               <Printer className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Print Manifest</span>
+              <span>{t('dispatch.printDossier', 'Print Manifest')}</span>
             </button>
           </div>
         </div>

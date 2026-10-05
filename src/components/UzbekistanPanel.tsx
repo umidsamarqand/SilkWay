@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { UzbekPoint, UzbekPointType, TaxiBooking, CityDistrictInfo } from '../types/travel';
 import { UZBEKISTAN_POINTS, INITIAL_TAXI_BOOKINGS, UZBEK_CITIES_AND_DISTRICTS } from '../data/uzbekistanData';
+import { useLanguage } from '../context/LanguageContext';
 import { 
   Building2, 
   Bed, 
@@ -33,29 +34,22 @@ interface UzbekistanPanelProps {
   onZoomToCityOrDistrict?: (item: CityDistrictInfo) => void;
 }
 
-const SERVICE_META: Record<string, { label: string; icon: string }> = {
-  pool: { label: 'Pool', icon: '🏊' },
-  rooftop: { label: 'Rooftop', icon: '☕' },
-  breakfast: { label: 'Breakfast', icon: '🍳' },
-  wifi: { label: 'Free WiFi', icon: '📶' },
-  airport_shuttle: { label: 'Airport Shuttle', icon: '🚕' },
-  ac: { label: 'AC', icon: '❄️' },
-  cards: { label: 'Cards Accepted', icon: '💳' },
-  parking: { label: 'Parking', icon: '🅿️' },
-  spa: { label: 'Spa / Hamam', icon: '🧖' },
-  vegetarian: { label: 'Vegetarian Options', icon: '🌿' }
+const SERVICE_KEYS = ['pool', 'rooftop', 'breakfast', 'wifi', 'airport_shuttle', 'ac', 'cards', 'parking', 'spa', 'vegetarian'] as const;
+
+const SERVICE_ICONS: Record<string, string> = {
+  pool: '🏊',
+  rooftop: '☕',
+  breakfast: '🍳',
+  wifi: '📶',
+  airport_shuttle: '🚕',
+  ac: '❄️',
+  cards: '💳',
+  parking: '🅿️',
+  spa: '🧖',
+  vegetarian: '🌿'
 };
 
-const CUISINE_OPTIONS = [
-  { id: 'all', label: 'All Cuisines' },
-  { id: 'plov', label: 'Silk Road Plov' },
-  { id: 'shashlik', label: 'Charcoal Shashlik' },
-  { id: 'samsa', label: 'Tandir Samsa' },
-  { id: 'lagman', label: 'Lagman Noodles' },
-  { id: 'manti', label: 'Steamed Manti' },
-  { id: 'tea', label: 'Teahouse & Sweets' },
-  { id: 'vegetarian', label: 'Vegetarian Friendly' }
-];
+const CUISINE_KEYS = ['all', 'plov', 'shashlik', 'samsa', 'lagman', 'manti', 'tea', 'vegetarian'] as const;
 
 export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
   onFlyToPoint,
@@ -66,6 +60,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
   activeCityDistrict,
   onZoomToCityOrDistrict
 }) => {
+  const { t, language } = useLanguage();
   const [internalSubtype, setInternalSubtype] = useState<UzbekPointType | 'all'>('all');
   const activeSubtype = externalSubtype !== undefined ? externalSubtype : internalSubtype;
   const setActiveSubtype = (val: UzbekPointType | 'all') => {
@@ -265,18 +260,18 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         <div className="relative z-10">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] font-bold tracking-widest uppercase bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded shadow-xs">
-              Silk Way · Experience Uzbekistan Effortlessly
+              {t('brand.fullTagline', 'Silk Way · Experience Uzbekistan Effortlessly')}
             </span>
             <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1">
-              <Check className="w-3.5 h-3.5" /> Full Country Directory Active
+              <Check className="w-3.5 h-3.5" /> {t('hero.activeDirectory', 'Full Country Directory Active')}
             </span>
           </div>
 
           <h3 className="text-base font-bold text-white mb-1 tracking-tight">
-            Hotels, Hostels, Restaurants & Taxis
+            {t('hero.title', 'Hotels, Hostels, Restaurants & Taxis')}
           </h3>
           <p className="text-xs text-slate-300 leading-relaxed mb-3">
-            Experience Uzbekistan effortlessly: boutique hotels, gourmet restaurants, backpacker hostels, and official airport taxi transfers across Tashkent, Samarkand, Bukhara, Khiva, and Zaamin.
+            {t('hero.description', 'Experience Uzbekistan effortlessly: boutique hotels, gourmet restaurants, backpacker hostels, and official airport taxi transfers across Tashkent, Samarkand, Bukhara, Khiva, and Zaamin.')}
           </p>
 
           <button
@@ -284,7 +279,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
             className="w-full py-2.5 px-3 text-xs font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-300 text-slate-950 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01] active:scale-[0.99]"
           >
             <Car className="w-4 h-4 text-slate-950" />
-            <span>Book Airport Taxi Pickup (Name Sign Included)</span>
+            <span>{t('hero.bookTaxi', 'Book Meet & Greet Airport Taxi (Name Sign)')}</span>
           </button>
         </div>
       </div>
@@ -301,7 +296,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           }`}
         >
           <Building2 className={`w-3.5 h-3.5 ${activeSubtype === 'hotel' ? 'text-slate-950' : 'text-amber-400'}`} />
-          <span>Hotels ({getSubtypeCount('hotel')})</span>
+          <span>{t('cat.hotels', 'Hotels')} ({getSubtypeCount('hotel')})</span>
         </button>
 
         {/* 2. Restaurants */}
@@ -314,7 +309,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           }`}
         >
           <UtensilsCrossed className={`w-3.5 h-3.5 ${activeSubtype === 'restaurant' ? 'text-slate-950' : 'text-orange-400'}`} />
-          <span>Restaurants ({getSubtypeCount('restaurant')})</span>
+          <span>{t('cat.restaurants', 'Restaurants')} ({getSubtypeCount('restaurant')})</span>
         </button>
 
         {/* 3. Hostels */}
@@ -327,7 +322,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           }`}
         >
           <Bed className={`w-3.5 h-3.5 ${activeSubtype === 'hostel' ? 'text-slate-950' : 'text-emerald-400'}`} />
-          <span>Hostels ({getSubtypeCount('hostel')})</span>
+          <span>{t('cat.hostels', 'Hostels')} ({getSubtypeCount('hostel')})</span>
         </button>
 
         {/* 4. Places to Watch */}
@@ -340,7 +335,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           }`}
         >
           <Eye className={`w-3.5 h-3.5 ${activeSubtype === 'place_to_watch' ? 'text-slate-950' : 'text-red-400'}`} />
-          <span>Sightseeing ({getSubtypeCount('place_to_watch')})</span>
+          <span>{t('cat.sightseeing', 'Sightseeing')} ({getSubtypeCount('place_to_watch')})</span>
         </button>
 
         {/* 5. Airport Taxis */}
@@ -353,7 +348,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           }`}
         >
           <Car className={`w-3.5 h-3.5 ${activeSubtype === 'airport_taxi' ? 'text-slate-950' : 'text-yellow-400'}`} />
-          <span>Taxis ({getSubtypeCount('airport_taxi')})</span>
+          <span>{t('cat.taxis', 'Taxis')} ({getSubtypeCount('airport_taxi')})</span>
         </button>
       </div>
 
@@ -362,17 +357,17 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-xs font-bold text-white">
             <MapPin className="w-3.5 h-3.5 text-amber-400" />
-            <span>Select City or District to Zoom & Mark</span>
+            <span>{t('location.selectTitle', 'Select City or District to Zoom & Mark')}</span>
           </div>
           {selectedDistrictId !== 'all' ? (
             <span className="text-[10px] font-bold text-amber-950 bg-amber-400 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping" />
-              <span>Marked & Zoomed</span>
+              <span>{t('location.markedAndZoomed', 'Marked & Zoomed')}</span>
             </span>
           ) : (
             <span className="text-[10px] text-slate-400 flex items-center gap-1">
               <ZoomIn className="w-3 h-3 text-slate-400" />
-              <span>Click to fly & pinpoint</span>
+              <span>{t('location.clickToZoom', 'Click to fly & pinpoint')}</span>
             </span>
           )}
         </div>
@@ -381,6 +376,15 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           {mainCities.map((city) => {
             const isSelected = selectedCity === city.cityName && (selectedDistrictId === 'all' || selectedDistrictId === city.id);
+            const localizedCityName = city.cityName === 'all' 
+              ? t('location.allUzbekistan', 'All Uzbekistan') 
+              : city.cityName === 'Samarkand' ? t('location.city.samarkand', 'Samarkand')
+              : city.cityName === 'Bukhara' ? t('location.city.bukhara', 'Bukhara')
+              : city.cityName === 'Khiva' ? t('location.city.khiva', 'Khiva')
+              : city.cityName === 'Tashkent' ? t('location.city.tashkent', 'Tashkent')
+              : city.cityName === 'Zaamin' ? t('location.city.zaamin', 'Zaamin')
+              : city.name;
+
             return (
               <button
                 key={city.id}
@@ -391,7 +395,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     : 'bg-slate-900/90 text-slate-300 border border-slate-700/60 hover:bg-slate-800 hover:text-white hover:border-slate-600'
                 }`}
               >
-                <span>{city.name}</span>
+                <span>{localizedCityName}</span>
                 <span className={`text-[10px] font-mono px-1 py-0.2 rounded ${
                   isSelected ? 'bg-slate-950 text-amber-300' : 'bg-slate-800 text-slate-400'
                 }`}>
@@ -409,10 +413,10 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           <div className="pt-2 border-t border-slate-800/80">
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider flex items-center gap-1">
-                <span>📍 Key Historic Districts & Quarters:</span>
+                <span>{t('location.keyDistricts', '📍 Key Historic Districts & Quarters:')}</span>
               </span>
               <span className="text-[10px] text-slate-400 font-mono">
-                Tap to zoom 15x
+                {t('location.tapToZoom', 'Tap to zoom 15x')}
               </span>
             </div>
 
@@ -451,7 +455,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by hotel name, dish, street, or feature..."
+              placeholder={t('search.placeholder', 'Search by hotel name, dish, street, or feature...')}
               className="w-full pl-9 pr-7 py-1.5 text-xs bg-slate-900/90 border border-slate-700/80 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-amber-400"
             />
             {searchQuery && (
@@ -467,17 +471,17 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           {/* Ranking / Sort Dropdown */}
           <div className="flex items-center gap-1.5 shrink-0 bg-slate-900/90 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs">
             <ArrowUpDown className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-[11px] text-slate-400 font-medium">Rank:</span>
+            <span className="text-[11px] text-slate-400 font-medium">{t('rank.label', 'Rank:')}</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
               className="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer"
             >
-              <option value="rating" className="bg-slate-900 text-white">⭐ Highest Rated</option>
-              <option value="popular" className="bg-slate-900 text-white">🔥 Most Popular</option>
-              <option value="stars" className="bg-slate-900 text-white">✨ Stars (5★ to 3★)</option>
-              <option value="price_low" className="bg-slate-900 text-white">💲 Price: Low to High</option>
-              <option value="price_high" className="bg-slate-900 text-white">💎 Price: High to Low</option>
+              <option value="rating" className="bg-slate-900 text-white">{t('rank.rating', '⭐ Highest Rated')}</option>
+              <option value="popular" className="bg-slate-900 text-white">{t('rank.popular', '🔥 Most Popular')}</option>
+              <option value="stars" className="bg-slate-900 text-white">{t('rank.stars', '✨ Stars (5★ to 3★)')}</option>
+              <option value="price_low" className="bg-slate-900 text-white">{t('rank.priceLow', '💲 Price: Low to High')}</option>
+              <option value="price_high" className="bg-slate-900 text-white">{t('rank.priceHigh', '💎 Price: High to Low')}</option>
             </select>
           </div>
         </div>
@@ -486,13 +490,13 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs scrollbar-none">
           <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
             <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-            Stars:
+            {t('stars.label', 'Stars:')}
           </span>
           {[
-            { value: 'all', label: 'All Stars' },
-            { value: 5, label: '⭐⭐⭐⭐⭐ 5-Star Luxury' },
-            { value: 4, label: '⭐⭐⭐⭐ 4-Star Boutique' },
-            { value: 3, label: '⭐⭐⭐ 3-Star Comfort' }
+            { value: 'all', label: t('stars.all', 'All Stars') },
+            { value: 5, label: t('stars.5', '⭐⭐⭐⭐⭐ 5-Star Luxury') },
+            { value: 4, label: t('stars.4', '⭐⭐⭐⭐ 4-Star Boutique') },
+            { value: 3, label: t('stars.3', '⭐⭐⭐ 3-Star Comfort') }
           ].map((starOpt) => {
             const isActive = selectedStar === starOpt.value;
             return (
@@ -516,21 +520,23 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
               <Filter className="w-3 h-3 text-amber-400" />
-              Filter by Services & Amenities:
+              {t('amenities.filterLabel', 'Filter by Services & Amenities:')}
             </span>
             {selectedServices.length > 0 && (
               <button
                 onClick={() => setSelectedServices([])}
                 className="text-[11px] text-amber-400 hover:text-amber-300 font-semibold"
               >
-                Clear ({selectedServices.length})
+                {t('amenities.clear', 'Clear')} ({selectedServices.length})
               </button>
             )}
           </div>
 
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-            {Object.entries(SERVICE_META).map(([srvKey, srv]) => {
+            {SERVICE_KEYS.map((srvKey) => {
               const isSelected = selectedServices.includes(srvKey);
+              const label = t(`srv.${srvKey}`, srvKey);
+              const icon = SERVICE_ICONS[srvKey] || '✨';
               return (
                 <button
                   key={srvKey}
@@ -545,8 +551,8 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                       : 'bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/60'
                   }`}
                 >
-                  <span>{srv.icon}</span>
-                  <span>{srv.label}</span>
+                  <span>{icon}</span>
+                  <span>{label}</span>
                 </button>
               );
             })}
@@ -557,22 +563,23 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         {(activeSubtype === 'restaurant' || activeSubtype === 'all') && (
           <div className="pt-2 border-t border-slate-800/80">
             <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block mb-1.5">
-              🍲 Regional Cuisine Specialties:
+              {t('cuisine.title', '🍲 Regional Cuisine Specialties:')}
             </span>
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-              {CUISINE_OPTIONS.map((c) => {
-                const isActive = selectedCuisine === c.id;
+              {CUISINE_KEYS.map((cKey) => {
+                const isActive = selectedCuisine === cKey;
+                const label = t(`cuisine.${cKey}`, cKey);
                 return (
                   <button
-                    key={c.id}
-                    onClick={() => setSelectedCuisine(c.id)}
+                    key={cKey}
+                    onClick={() => setSelectedCuisine(cKey)}
                     className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-all ${
                       isActive
                         ? 'bg-orange-500 text-white font-bold shadow-xs'
                         : 'bg-orange-950/40 text-orange-200 border border-orange-800/60 hover:bg-orange-900/60'
                     }`}
                   >
-                    {c.label}
+                    {label}
                   </button>
                 );
               })}
@@ -583,8 +590,8 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         {/* Results summary bar */}
         <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
           <span>
-            Showing <strong className="text-white">{filteredAndRankedPoints.length}</strong> verified spots
-            {selectedCity !== 'all' && ` in ${selectedCity}`}
+            {t('results.showing', 'Showing')} <strong className="text-white">{filteredAndRankedPoints.length}</strong> {t('results.verifiedSpots', 'verified spots')}
+            {selectedCity !== 'all' && ` ${t('results.inCity', 'in')} ${selectedCity}`}
           </span>
           {(selectedStar !== 'all' || selectedServices.length > 0 || selectedCuisine !== 'all' || searchQuery) && (
             <button
@@ -596,7 +603,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
               }}
               className="text-amber-400 hover:text-amber-300 font-semibold"
             >
-              Reset Filters
+              {t('nav.resetFilters', 'Reset Filters')}
             </button>
           )}
         </div>
@@ -608,25 +615,25 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              Active Airport Pickups ({bookings.length})
+              {t('taxi.activePickups', 'Active Airport Pickups')} ({bookings.length})
             </span>
             <span className="text-[10px] uppercase font-bold text-emerald-300 bg-emerald-900/60 border border-emerald-700/60 px-2 py-0.5 rounded">
-              Confirmed
+              {t('taxi.confirmed', 'Confirmed')}
             </span>
           </div>
 
           {bookings.map((b) => (
             <div key={b.id} className="p-2.5 bg-slate-900/90 rounded-xl border border-emerald-900/60 text-xs space-y-1 text-white">
               <div className="flex items-center justify-between font-bold text-white">
-                <span>{b.passengerName} (Flight {b.flightNumber})</span>
+                <span>{b.passengerName} ({t('taxi.flight', 'Flight')} {b.flightNumber})</span>
                 <span className="font-mono text-emerald-400">${b.priceUsd} USD</span>
               </div>
               <div className="text-[11px] text-slate-400 flex items-center justify-between">
                 <span>{b.airport} → {b.dropoffLocation}</span>
-                <span>{b.passengers} Pax · {b.luggageCount} Bags</span>
+                <span>{b.passengers} {t('taxi.pax', 'Pax')} · {b.luggageCount} {t('taxi.bags', 'Bags')}</span>
               </div>
               <div className="text-[11px] text-slate-300 pt-1 border-t border-slate-800 flex items-center justify-between">
-                <span className="text-slate-400">Driver: <strong className="text-white">{b.driverName}</strong></span>
+                <span className="text-slate-400">{t('taxi.driver', 'Driver:')} <strong className="text-white">{b.driverName}</strong></span>
                 <span className="font-mono text-amber-400">{b.driverPhone}</span>
               </div>
             </div>
@@ -639,9 +646,9 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         {filteredAndRankedPoints.length === 0 ? (
           <div className="p-8 text-center bg-[#0c1838]/85 rounded-2xl border border-slate-800 text-slate-400 space-y-2">
             <Search className="w-8 h-8 text-slate-500 mx-auto" />
-            <p className="text-sm font-bold text-white">No spots match your exact filter</p>
+            <p className="text-sm font-bold text-white">{t('results.noMatches', 'No spots match your exact filter')}</p>
             <p className="text-xs text-slate-400 max-w-sm mx-auto">
-              Try adjusting your star ratings, services, or cuisine choices to discover more spots across Uzbekistan.
+              {t('results.noMatchesDesc', 'Try adjusting your star ratings, services, or cuisine choices to discover more spots across Uzbekistan.')}
             </p>
             <button
               onClick={() => {
@@ -654,7 +661,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
               }}
               className="mt-2 px-3 py-1.5 text-xs font-bold bg-amber-400 text-slate-950 rounded-xl hover:bg-amber-300 shadow-md shadow-amber-500/20"
             >
-              Reset All Filters
+              {t('results.resetAll', 'Reset All Filters')}
             </button>
           </div>
         ) : (
@@ -705,12 +712,12 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                           </span>
                           <span className="text-[10px] text-slate-400 block -mt-0.5">
                             {point.type === 'hotel' || point.type === 'hostel' 
-                              ? '/night' 
+                              ? t('results.night', '/night')
                               : point.type === 'restaurant'
-                              ? ' avg meal'
+                              ? t('results.avgMeal', ' avg meal')
                               : point.type === 'airport_taxi'
-                              ? ' fare'
-                              : ' entry'}
+                              ? t('results.fare', ' fare')
+                              : t('results.entry', ' entry')}
                           </span>
                         </div>
                       )}
@@ -720,21 +727,21 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     <div className="text-[11px] text-slate-400 flex items-center gap-1.5 mb-1.5 flex-wrap">
                       <span className="capitalize font-semibold text-amber-300">
                         {point.type === 'place_to_watch' 
-                          ? 'Must-See Spot' 
+                          ? t('results.spotType.mustSee', 'Must-See Spot')
                           : point.type === 'restaurant'
-                          ? '🍽️ Uzbek Restaurant'
+                          ? t('results.spotType.restaurant', '🍽️ Uzbek Restaurant')
                           : point.type === 'hotel'
-                          ? `🏨 ${point.stars || 4}-Star Hotel`
+                          ? `🏨 ${point.stars || 4}★ ${t('results.spotType.hotel', 'Star Hotel')}`
                           : point.type === 'hostel'
-                          ? '🛏️ Backpacker Hostel'
-                          : '🚕 Airport Taxi'}
+                          ? t('results.spotType.hostel', '🛏️ Backpacker Hostel')
+                          : t('results.spotType.taxi', '🚕 Airport Taxi')}
                       </span>
                       <span>·</span>
                       <span className="flex items-center gap-0.5 text-amber-400 font-bold">
                         <Star className="w-3 h-3 fill-amber-400 stroke-none" />
                         {point.rating}
                       </span>
-                      <span className="text-slate-400 text-[10px]">({point.reviewsCount} reviews)</span>
+                      <span className="text-slate-400 text-[10px]">({point.reviewsCount} {t('results.reviews', 'reviews')})</span>
 
                       {point.district && (
                         <>
@@ -754,15 +761,15 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     {point.services && point.services.length > 0 && (
                       <div className="flex items-center gap-1 overflow-x-auto pb-1 mb-2 scrollbar-none">
                         {point.services.map((srvKey) => {
-                          const meta = SERVICE_META[srvKey];
-                          if (!meta) return null;
+                          const label = t(`srv.${srvKey}`, srvKey);
+                          const icon = SERVICE_ICONS[srvKey] || '✨';
                           return (
                             <span
                               key={srvKey}
                               className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-slate-900/90 border border-slate-700/60 text-slate-200 text-[10px] font-medium rounded-md whitespace-nowrap shrink-0"
                             >
-                              <span>{meta.icon}</span>
-                              <span>{meta.label}</span>
+                              <span>{icon}</span>
+                              <span>{label}</span>
                             </span>
                           );
                         })}
@@ -800,7 +807,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                         className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
                       >
                         <Navigation className="w-3 h-3" />
-                        <span>Pin on Map</span>
+                        <span>{t('results.flyTo', 'Pin on Map')}</span>
                       </button>
                     </div>
                   </div>
@@ -821,8 +828,8 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                   <Car className="w-5 h-5 text-amber-700" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-950">Book Uzbekistan Airport Pickup</h4>
-                  <p className="text-xs text-slate-500">Official airport driver with personalized name tablet at arrivals</p>
+                  <h4 className="text-sm font-bold text-slate-950">{t('taxiModal.title', 'Book Uzbekistan Airport Pickup')}</h4>
+                  <p className="text-xs text-slate-500">{t('taxiModal.subtitle', 'Official airport driver with personalized name tablet at arrivals')}</p>
                 </div>
               </div>
               <button
@@ -838,15 +845,15 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto">
                   <Check className="w-6 h-6" />
                 </div>
-                <h4 className="text-sm font-bold text-emerald-950">Airport Pickup Confirmed!</h4>
+                <h4 className="text-sm font-bold text-emerald-950">{t('taxiModal.successTitle', 'Airport Pickup Confirmed!')}</h4>
                 <p className="text-xs text-emerald-800">
-                  Your driver <strong>Dilshod Karimov</strong> will meet you at the arrivals gate with your name board.
+                  {t('taxiModal.successDesc', 'Your chauffeur has received flight details and will await you with your personalized name board at the exit gate.')}
                 </p>
               </div>
             ) : (
               <form onSubmit={handleBookTaxi} className="space-y-3 text-xs">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Arrival Airport</label>
+                  <label className="font-semibold text-slate-700 block mb-1">{t('taxiModal.fieldAirport', 'Arrival Airport')}</label>
                   <select
                     value={taxiForm.airport}
                     onChange={(e) => setTaxiForm({ ...taxiForm, airport: e.target.value })}
@@ -860,7 +867,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Passenger Name (for Airport Name Sign)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">{t('taxiModal.fieldName', 'Passenger Name (for Airport Name Sign)')}</label>
                   <input
                     type="text"
                     required
@@ -873,7 +880,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Flight Number</label>
+                    <label className="font-semibold text-slate-700 block mb-1">{t('taxiModal.fieldFlight', 'Flight Number')}</label>
                     <input
                       type="text"
                       placeholder="e.g. HY-232 / TK-368"
@@ -883,7 +890,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Landing Date & Time</label>
+                    <label className="font-semibold text-slate-700 block mb-1">{t('taxiModal.fieldTime', 'Landing Date & Time')}</label>
                     <input
                       type="text"
                       value={taxiForm.pickupTime}
@@ -894,7 +901,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Hotel or Drop-off Address</label>
+                  <label className="font-semibold text-slate-700 block mb-1">{t('taxiModal.fieldDropoff', 'Hotel or Drop-off Address')}</label>
                   <input
                     type="text"
                     required
@@ -907,20 +914,20 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
 
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Vehicle Class</label>
+                    <label className="font-semibold text-slate-700 block mb-1">{t('taxiModal.fieldVehicle', 'Vehicle Class')}</label>
                     <select
                       value={taxiForm.vehicleType}
                       onChange={(e) => setTaxiForm({ ...taxiForm, vehicleType: e.target.value as any })}
                       className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-900"
                     >
-                      <option value="standard_sedan">Standard Sedan (Cobalt)</option>
-                      <option value="comfort_plus">Comfort Plus (Lacetti)</option>
-                      <option value="minivan_luggage">Minivan (Hyundai H1)</option>
-                      <option value="business_vip">VIP Executive (Malibu/Merc)</option>
+                      <option value="standard_sedan">{t('vehicle.standard', 'Standard Sedan (Cobalt)')}</option>
+                      <option value="comfort_plus">{t('vehicle.comfort', 'Comfort Plus (Lacetti)')}</option>
+                      <option value="minivan_luggage">{t('vehicle.minivan', 'Minivan (Hyundai H1)')}</option>
+                      <option value="business_vip">{t('vehicle.vip', 'VIP Executive (Malibu/Merc)')}</option>
                     </select>
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Passengers</label>
+                    <label className="font-semibold text-slate-700 block mb-1">{t('taxiModal.fieldPax', 'Passengers')}</label>
                     <input
                       type="number"
                       min={1}
@@ -931,7 +938,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Luggage Bags</label>
+                    <label className="font-semibold text-slate-700 block mb-1">{t('taxiModal.fieldLuggage', 'Luggage Bags')}</label>
                     <input
                       type="number"
                       min={0}
@@ -945,7 +952,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
 
                 <div className="p-3 bg-slate-100 rounded-xl flex items-center justify-between">
                   <div>
-                    <span className="text-[11px] text-slate-500 block">Total Guaranteed Tariff</span>
+                    <span className="text-[11px] text-slate-500 block">{t('taxiModal.pricingSummary', 'Total Guaranteed Tariff')}</span>
                     <strong className="text-sm font-mono text-emerald-800">${currentPriceUsd} USD</strong>
                     <span className="text-[10px] text-slate-500 ml-1">({currentPriceUzs.toLocaleString()} UZS)</span>
                   </div>
@@ -958,7 +965,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                   type="submit"
                   className="w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-colors shadow-sm"
                 >
-                  Confirm & Dispatch Airport Chauffeur
+                  {t('taxiModal.confirmButton', 'Confirm & Dispatch Airport Chauffeur')}
                 </button>
               </form>
             )}

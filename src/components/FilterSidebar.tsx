@@ -11,6 +11,7 @@ import {
 } from '../types/travel';
 import { CATEGORY_LABELS, TRANSIT_MODE_LABELS } from '../data/destinations';
 import { UzbekistanPanel } from './UzbekistanPanel';
+import { useLanguage } from '../context/LanguageContext';
 import { 
   Search, 
   Calendar, 
@@ -79,6 +80,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   activeCityDistrict,
   onZoomToCityOrDistrict
 }) => {
+  const { t } = useLanguage();
   // Compute trip duration in days
   const departure = new Date(filter.departureDate);
   const returnD = new Date(filter.returnDate);
@@ -149,7 +151,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           }`}
         >
           <Building2 className={`w-3.5 h-3.5 ${activeTab === 'hotels' ? 'text-slate-950' : 'text-amber-400'}`} />
-          <span>Hotels</span>
+          <span>{t('nav.hotels', 'Hotels')}</span>
           <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'hotels' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
             13
           </span>
@@ -165,7 +167,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           }`}
         >
           <UtensilsCrossed className={`w-3.5 h-3.5 ${activeTab === 'restaurants' ? 'text-slate-950' : 'text-orange-400'}`} />
-          <span>Restaurants</span>
+          <span>{t('nav.restaurants', 'Restaurants')}</span>
           <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'restaurants' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
             11
           </span>
@@ -181,7 +183,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           }`}
         >
           <Eye className={`w-3.5 h-3.5 ${activeTab === 'sightseeing' ? 'text-slate-950' : 'text-red-400'}`} />
-          <span>Sightseeing Places</span>
+          <span>{t('nav.sightseeing', 'Sightseeing Places')}</span>
           <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'sightseeing' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
             6
           </span>
@@ -197,7 +199,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           }`}
         >
           <Bed className={`w-3.5 h-3.5 ${activeTab === 'hostels' ? 'text-slate-950' : 'text-emerald-400'}`} />
-          <span>Hostels</span>
+          <span>{t('nav.hostels', 'Hostels')}</span>
           <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'hostels' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
             6
           </span>
@@ -213,7 +215,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           }`}
         >
           <Car className={`w-3.5 h-3.5 ${activeTab === 'airport_taxi' ? 'text-slate-950' : 'text-yellow-400'}`} />
-          <span>Airport Taxis</span>
+          <span>{t('nav.taxis', 'Airport Taxis')}</span>
           <span className={`text-[10px] font-mono px-1 py-0.2 rounded tabular-nums ${activeTab === 'airport_taxi' ? 'bg-slate-950 text-amber-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
             4
           </span>
@@ -229,7 +231,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           }`}
         >
           <SlidersHorizontal className={`w-3.5 h-3.5 ${activeTab === 'filters' ? 'text-slate-950' : 'text-slate-400'}`} />
-          <span>Filters</span>
+          <span>{t('nav.filters', 'Filters')}</span>
         </button>
 
         {/* 7. Route */}
@@ -242,7 +244,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           }`}
         >
           <Luggage className={`w-3.5 h-3.5 ${activeTab === 'itinerary' ? 'text-slate-950' : 'text-slate-400'}`} />
-          <span>Route</span>
+          <span>{t('nav.route', 'Route')}</span>
           {itinerary.length > 0 && (
             <span className={`text-[10px] font-mono px-1 py-0.2 rounded font-bold tabular-nums ${activeTab === 'itinerary' ? 'bg-slate-950 text-amber-300' : 'bg-amber-500/20 text-amber-300'}`}>
               {itinerary.length}
@@ -921,7 +923,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           onClick={onResetFilters}
           className="px-3 py-2 text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl transition-colors border border-transparent hover:border-slate-700"
         >
-          Reset Filters
+          {t('action.reset', 'Reset Filters')}
         </button>
 
         <button
@@ -938,38 +940,38 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         >
           {activeTab === 'hotels' ? (
             <>
-              <span>Next: Restaurants & Gastronomy</span>
+              <span>{t('action.nextRestaurants', 'Next: Restaurants & Gastronomy')}</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : activeTab === 'restaurants' ? (
             <>
-              <span>Next: Sightseeing Places</span>
+              <span>{t('action.nextSightseeing', 'Next: Sightseeing Places')}</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : activeTab === 'sightseeing' ? (
             <>
-              <span>Next: Hostels & Backpacker Spots</span>
+              <span>{t('action.nextHostels', 'Next: Hostels & Backpacker Spots')}</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : activeTab === 'hostels' ? (
             <>
-              <span>Next: Airport Taxi Dispatch</span>
+              <span>{t('action.nextTaxis', 'Next: Airport Taxi Dispatch')}</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : activeTab === 'airport_taxi' ? (
             <>
-              <span>View Route Plan ({itinerary.length})</span>
+              <span>{t('action.viewRoute', 'View Route Plan')} ({itinerary.length})</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : activeTab === 'filters' ? (
             <>
-              <span>Browse Uzbekistan Hotels</span>
+              <span>{t('action.browseHotels', 'Browse Uzbekistan Hotels')}</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </>
           ) : (
             <>
               <Share2 className="w-3.5 h-3.5 text-slate-950" />
-              <span>Export Logistics Manifest</span>
+              <span>{t('action.exportManifest', 'Export Logistics Manifest')}</span>
             </>
           )}
         </button>
