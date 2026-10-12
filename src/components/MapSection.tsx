@@ -531,7 +531,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
                     </div>
 
                     <a
-                      href={selectedUzbekPoint.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedUzbekPoint.name + ' Tashkent')}`}
+                      href={selectedUzbekPoint.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedUzbekPoint.name + ' ' + (selectedUzbekPoint.city || 'Uzbekistan'))}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-2 py-1 text-[10px] font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg flex items-center gap-1 shadow-xs transition-colors shrink-0"

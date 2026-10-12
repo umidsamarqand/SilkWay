@@ -704,7 +704,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                       <div className="flex items-center gap-1.5 shrink-0 w-full sm:w-auto">
                         {/* Direct Google Maps Exact Location Search Link */}
                         <a
-                          href={point.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(point.name + ' Tashkent')}`}
+                          href={point.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(point.name + ' ' + (point.city || 'Uzbekistan'))}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
