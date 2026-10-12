@@ -21,7 +21,8 @@ import {
   ArrowUpDown,
   Search,
   Filter,
-  X
+  X,
+  ExternalLink
 } from 'lucide-react';
 
 interface UzbekistanPanelProps {
@@ -696,22 +697,38 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     </div>
 
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-800/80 mt-1">
-                      <span className="text-[11px] text-slate-400 truncate max-w-full sm:max-w-[180px]" title={point.address}>
+                      <span className="text-[11px] text-slate-400 truncate max-w-full sm:max-w-[160px]" title={point.address}>
                         📍 {point.address}
                       </span>
 
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSelectPoint(point);
-                          onFlyToPoint(point);
-                        }}
-                        className="w-full sm:w-auto px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-300 text-slate-950 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95 shrink-0"
-                      >
-                        <MapPin className="w-3.5 h-3.5 text-slate-950 shrink-0" />
-                        <span className="whitespace-nowrap">{t('results.showOnMap', 'Show on Map')}</span>
-                      </button>
+                      <div className="flex items-center gap-1.5 shrink-0 w-full sm:w-auto">
+                        {/* Direct Google Maps Exact Location Search Link */}
+                        <a
+                          href={point.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(point.name + ' Tashkent')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          title={`View ${point.name} on Google Maps`}
+                          className="flex-1 sm:flex-initial px-2.5 py-1.5 text-xs font-semibold bg-slate-900/90 hover:bg-slate-800 text-amber-300 hover:text-amber-200 border border-slate-700/80 hover:border-amber-400/50 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-xs active:scale-95 group/gmap"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5 text-amber-400 group-hover/gmap:text-amber-300 shrink-0" />
+                          <span className="whitespace-nowrap">{t('results.googleMaps', 'Google Maps')}</span>
+                        </a>
+
+                        {/* In-app Map Fly To & Pinpoint Button */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSelectPoint(point);
+                            onFlyToPoint(point);
+                          }}
+                          className="flex-1 sm:flex-initial px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-300 text-slate-950 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95 shrink-0"
+                        >
+                          <MapPin className="w-3.5 h-3.5 text-slate-950 shrink-0" />
+                          <span className="whitespace-nowrap">{t('results.showOnMap', 'Show on Map')}</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

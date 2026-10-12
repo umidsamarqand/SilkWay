@@ -118,6 +118,7 @@ export interface UzbekPoint {
   address: string;
   phoneOrContact?: string;
   airportCode?: string; // For airport taxi hubs (TAS, SKD, BHK, UGC)
+  mapUrl?: string; // Google Maps search link (e.g., https://www.google.com/maps/search/?api=1&query=NAME+Tashkent)
 }
 
 export interface TaxiBooking {

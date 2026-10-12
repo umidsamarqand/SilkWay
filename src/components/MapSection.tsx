@@ -26,7 +26,8 @@ import {
   Building2,
   Bed,
   Eye,
-  Phone
+  Phone,
+  ExternalLink
 } from 'lucide-react';
 import { UzbekPoint, CityDistrictInfo } from '../types/travel';
 import { useLanguage } from '../context/LanguageContext';
@@ -524,8 +525,20 @@ export const MapSection: React.FC<MapSectionProps> = ({
                     </div>
                   )}
 
-                  <div className="text-[10px] text-slate-400 truncate">
-                    {selectedUzbekPoint.address}
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200 mt-2">
+                    <div className="text-[10px] text-slate-500 truncate max-w-[180px]" title={selectedUzbekPoint.address}>
+                      📍 {selectedUzbekPoint.address}
+                    </div>
+
+                    <a
+                      href={selectedUzbekPoint.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedUzbekPoint.name + ' Tashkent')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2 py-1 text-[10px] font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg flex items-center gap-1 shadow-xs transition-colors shrink-0"
+                    >
+                      <ExternalLink className="w-3 h-3 text-slate-950" />
+                      <span>Google Maps</span>
+                    </a>
                   </div>
                 </div>
               </InfoWindow>
