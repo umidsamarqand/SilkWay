@@ -110,12 +110,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             aria-label="Silk Way Homepage"
           >
             <motion.div
-              whileHover={{ rotate: 18, scale: 1.08 }}
+              whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.92 }}
               transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-              className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-terracotta-500 text-slate-950 flex items-center justify-center shadow-md shadow-amber-500/20 shrink-0"
+              className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-terracotta-500 text-slate-950 flex items-center justify-center shadow-md shadow-amber-500/20 shrink-0 overflow-hidden"
             >
-              <Compass className="w-5 h-5 text-slate-950" />
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent"
+                animate={{ x: ['-100%', '150%'] }}
+                transition={{ duration: 3.2, repeat: Infinity, repeatDelay: 1.8, ease: 'easeInOut' }}
+              />
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 16, repeat: Infinity, ease: 'linear' }}
+              >
+                <Compass className="w-5 h-5 text-slate-950 relative z-10" />
+              </motion.div>
             </motion.div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">

@@ -360,7 +360,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('search.placeholder', 'Search by hotel name, dish, street, or feature...')}
-              className="w-full pl-9 pr-7 py-1.5 text-xs bg-slate-900/90 border border-slate-700/80 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-amber-400"
+              className="w-full pl-9 pr-7 py-1.5 text-xs bg-slate-900/90 border border-slate-700/80 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/60 focus:border-amber-400 focus:shadow-lg focus:shadow-amber-500/10 transition-shadow"
             />
             {searchQuery && (
               <button
@@ -404,17 +404,20 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           ].map((starOpt) => {
             const isActive = selectedStar === starOpt.value;
             return (
-              <button
+              <motion.button
                 key={String(starOpt.value)}
                 onClick={() => setSelectedStar(starOpt.value as any)}
-                className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-all ${
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.93 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap ${
                   isActive
                     ? 'bg-amber-400 text-slate-950 font-bold shadow-xs'
-                    : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/60'
+                    : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/60 transition-colors'
                 }`}
               >
                 {starOpt.label}
-              </button>
+              </motion.button>
             );
           })}
         </div>
@@ -442,22 +445,25 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
               const label = t(`srv.${srvKey}`, srvKey);
               const icon = SERVICE_ICONS[srvKey] || '✨';
               return (
-                <button
+                <motion.button
                   key={srvKey}
                   onClick={() => {
                     setSelectedServices(prev =>
                       isSelected ? prev.filter(s => s !== srvKey) : [...prev, srvKey]
                     );
                   }}
-                  className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ${
+                  whileHover={{ scale: 1.06, y: -1 }}
+                  whileTap={{ scale: 0.92 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                  className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap flex items-center gap-1 shrink-0 ${
                     isSelected
                       ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-xs'
-                      : 'bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/60'
+                      : 'bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/60 transition-colors'
                   }`}
                 >
                   <span>{icon}</span>
                   <span>{label}</span>
-                </button>
+                </motion.button>
               );
             })}
           </div>
@@ -474,17 +480,20 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 const isActive = selectedCuisine === cKey;
                 const label = t(`cuisine.${cKey}`, cKey);
                 return (
-                  <button
+                  <motion.button
                     key={cKey}
                     onClick={() => setSelectedCuisine(cKey)}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-all ${
+                    whileHover={{ scale: 1.06 }}
+                    whileTap={{ scale: 0.92 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap ${
                       isActive
                         ? 'bg-orange-500 text-white font-bold shadow-xs'
-                        : 'bg-orange-950/40 text-orange-200 border border-orange-800/60 hover:bg-orange-900/60'
+                        : 'bg-orange-950/40 text-orange-200 border border-orange-800/60 hover:bg-orange-900/60 transition-colors'
                     }`}
                   >
                     {label}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>

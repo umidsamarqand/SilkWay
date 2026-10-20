@@ -302,6 +302,11 @@ export const MapSection: React.FC<MapSectionProps> = ({
             gestureHandling="greedy"
             disableDefaultUI={false}
             className="w-full h-full"
+            onClick={() => {
+              // Clicking empty map surroundings closes any open pin/InfoWindow
+              onSelectDestination(null);
+              onSelectUzbekPoint(null);
+            }}
           >
             <CameraPanController center={mapCenter} zoom={mapZoom} />
             <CorridorsRenderer corridors={corridors} activeCorridorId={activeCorridorId} />

@@ -216,6 +216,15 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
       {/* Main Tab Content Container */}
       <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+      <AnimatePresence mode="wait">
+      <motion.div
+        key={activeTab}
+        initial={{ opacity: 0, x: 14 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -14, transition: { duration: 0.15 } }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="space-y-6"
+      >
         {/* 1. HOTELS */}
         {activeTab === 'hotels' && (
           <UzbekistanPanel
@@ -366,19 +375,22 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 {regions.map((reg) => {
                   const isActive = filter.selectedRegion === reg.id;
                   return (
-                    <button
+                    <motion.button
                       key={reg.id}
                       onClick={() =>
                         onFilterChange((prev) => ({ ...prev, selectedRegion: reg.id }))
                       }
-                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.93 }}
+                      transition={{ type: 'spring', stiffness: 420, damping: 24 }}
+                      className={`px-3 py-1.5 text-xs font-medium rounded-md ${
                         isActive
                           ? 'bg-slate-900 text-white shadow-xs'
-                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors'
                       }`}
                     >
                       {reg.label}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
@@ -573,26 +585,33 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   ([key, val]) => {
                     const isSelected = filter.selectedCategories.includes(key);
                     return (
-                      <button
+                      <motion.button
                         key={key}
                         onClick={() => toggleCategory(key)}
-                        className={`p-2 rounded-lg border text-left flex items-start gap-2 transition-all ${
+                        whileHover={{ scale: 1.015 }}
+                        whileTap={{ scale: 0.97 }}
+                        transition={{ type: 'spring', stiffness: 420, damping: 24 }}
+                        className={`p-2 rounded-lg border text-left flex items-start gap-2 ${
                           isSelected
                             ? 'border-blue-600 bg-blue-50/70 text-blue-950 shadow-xs ring-1 ring-blue-600'
-                            : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-800'
+                            : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-800 transition-colors'
                         }`}
                       >
                         <span className="text-base select-none">{val.icon}</span>
                         <div className="min-w-0 flex-1">
                           <div className="text-xs font-semibold leading-tight flex items-center justify-between">
                             <span>{val.label}</span>
-                            {isSelected && <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />}
+                            {isSelected && (
+                              <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 20 }}>
+                                <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                              </motion.span>
+                            )}
                           </div>
                           <p className="text-[10px] text-slate-500 line-clamp-1 mt-0.5">
                             {val.desc}
                           </p>
                         </div>
-                      </button>
+                      </motion.button>
                     );
                   }
                 )}
@@ -613,18 +632,21 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   ([mode, data]) => {
                     const isSelected = filter.selectedTransitModes.includes(mode);
                     return (
-                      <button
+                      <motion.button
                         key={mode}
                         onClick={() => toggleTransitMode(mode)}
-                        className={`px-2.5 py-1 text-xs font-medium rounded-md border transition-all flex items-center gap-1.5 ${
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.93 }}
+                        transition={{ type: 'spring', stiffness: 420, damping: 24 }}
+                        className={`px-2.5 py-1 text-xs font-medium rounded-md border flex items-center gap-1.5 ${
                           isSelected
                             ? 'bg-slate-900 text-white border-slate-900'
-                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 transition-colors'
                         }`}
                       >
                         <span>{data.icon}</span>
                         <span>{data.label}</span>
-                      </button>
+                      </motion.button>
                     );
                   }
                 )}
@@ -913,6 +935,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             )}
           </div>
         )}
+      </motion.div>
+      </AnimatePresence>
       </div>
 
       {/* Persistent Bottom Action Bar */}
