@@ -96,21 +96,82 @@ const CorridorsRenderer: React.FC<{ corridors: LogisticsCorridor[]; activeCorrid
   return null;
 };
 
-// Subcomponent to animate camera when user clicks a destination or region
-const CameraPanController: React.FC<{ center: { lat: number; lng: number }; zoom: number }> = ({ 
-  center, 
-  zoom 
+// Smoothly interpolates the camera (center + zoom) from wherever it is now to a target,
+// frame by frame, so every programmatic move (marker click, region jump, fly-to) glides
+// instead of snapping — regardless of how the underlying Maps renderer handles setZoom/panTo.
+function easeOutCubic(t: number) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+function animateMapCamera(
+  map: google.maps.Map,
+  target: { center: { lat: number; lng: number }; zoom: number },
+  rafRef: React.MutableRefObject<number | null>,
+  duration = 650
+) {
+  if (rafRef.current !== null) {
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = null;
+  }
+
+  const startCenter = map.getCenter();
+  const startLat = startCenter ? startCenter.lat() : target.center.lat;
+  const startLng = startCenter ? startCenter.lng() : target.center.lng;
+  const startZoom = map.getZoom() ?? target.zoom;
+
+  // Nothing to animate
+  if (
+    Math.abs(startLat - target.center.lat) < 1e-7 &&
+    Math.abs(startLng - target.center.lng) < 1e-7 &&
+    Math.abs(startZoom - target.zoom) < 1e-3
+  ) {
+    return;
+  }
+
+  const startTime = performance.now();
+
+  const step = (now: number) => {
+    const t = Math.min(1, (now - startTime) / duration);
+    const e = easeOutCubic(t);
+    const lat = startLat + (target.center.lat - startLat) * e;
+    const lng = startLng + (target.center.lng - startLng) * e;
+    const zoom = startZoom + (target.zoom - startZoom) * e;
+
+    if (typeof (map as any).moveCamera === 'function') {
+      (map as any).moveCamera({ center: { lat, lng }, zoom });
+    } else {
+      map.setCenter({ lat, lng });
+      map.setZoom(zoom);
+    }
+
+    if (t < 1) {
+      rafRef.current = requestAnimationFrame(step);
+    } else {
+      rafRef.current = null;
+    }
+  };
+
+  rafRef.current = requestAnimationFrame(step);
+}
+
+// Subcomponent to animate camera when user clicks a destination, a pin, or a region
+const CameraPanController: React.FC<{ center: { lat: number; lng: number }; zoom: number }> = ({
+  center,
+  zoom
 }) => {
   const map = useMap();
+  const rafRef = React.useRef<number | null>(null);
 
   useEffect(() => {
-    if (map) {
-      map.panTo(center);
-      // Only set zoom if different
-      if (map.getZoom() !== zoom) {
-        map.setZoom(zoom);
+    if (!map) return;
+    animateMapCamera(map, { center, zoom }, rafRef);
+
+    return () => {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
       }
-    }
+    };
   }, [map, center.lat, center.lng, zoom]);
 
   return null;
@@ -144,6 +205,35 @@ export const MapSection: React.FC<MapSectionProps> = ({
   const [activeCorridorId, setActiveCorridorId] = useState<string | undefined>(undefined);
   const [showCorridorList, setShowCorridorList] = useState(false);
   const [mapType, setMapType] = useState<'roadmap' | 'satellite' | 'terrain'>('roadmap');
+
+  // Remembers the camera position from just before a marker click zoomed in,
+  // so closing/deselecting can smoothly zoom back out to where it was.
+  const [prevCamera, setPrevCamera] = useState<{ center: { lat: number; lng: number }; zoom: number } | null>(null);
+
+  const zoomInOnDestination = (dest: Destination) => {
+    setPrevCamera((prev) => prev ?? { center: mapCenter, zoom: mapZoom });
+    onSetCamera(dest.coordinates, Math.max(mapZoom, 9));
+    onSelectDestination(dest);
+  };
+
+  const zoomInOnUzbekPoint = (point: UzbekPoint) => {
+    setPrevCamera((prev) => prev ?? { center: mapCenter, zoom: mapZoom });
+    onSetCamera(point.coordinates, 16);
+    onSelectUzbekPoint(point);
+  };
+
+  const zoomOutToPrevious = () => {
+    setPrevCamera((prev) => {
+      if (prev) onSetCamera(prev.center, prev.zoom);
+      return null;
+    });
+  };
+
+  const handleDeselectAll = () => {
+    onSelectDestination(null);
+    onSelectUzbekPoint(null);
+    zoomOutToPrevious();
+  };
 
   // Quick region jump presets for Uzbekistan
   const regionPresets = [
@@ -302,11 +392,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
             gestureHandling="greedy"
             disableDefaultUI={false}
             className="w-full h-full"
-            onClick={() => {
-              // Clicking empty map surroundings closes any open pin/InfoWindow
-              onSelectDestination(null);
-              onSelectUzbekPoint(null);
-            }}
+            onClick={handleDeselectAll}
           >
             <CameraPanController center={mapCenter} zoom={mapZoom} />
             <CorridorsRenderer corridors={corridors} activeCorridorId={activeCorridorId} />
@@ -322,7 +408,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
                   key={dest.id}
                   position={dest.coordinates}
                   title={`${dest.name}, ${dest.country}`}
-                  onClick={() => onSelectDestination(dest)}
+                  onClick={() => zoomInOnDestination(dest)}
                 >
                   <div className="relative group cursor-pointer animate-marker-drop transition-transform duration-200 hover:scale-110 active:scale-95">
                     {isSelected ? (
@@ -367,7 +453,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
             {selectedDestination && (
               <InfoWindow
                 position={selectedDestination.coordinates}
-                onCloseClick={() => onSelectDestination(null)}
+                onCloseClick={handleDeselectAll}
               >
                 <div className="max-w-[280px] p-1 font-sans text-slate-900 animate-scale-in">
                   <div className="relative h-28 -mx-1 -mt-1 mb-2 rounded-t overflow-hidden bg-slate-100">
@@ -453,7 +539,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
                   key={point.id}
                   position={point.coordinates}
                   title={`${point.name} (${point.city})`}
-                  onClick={() => onSelectUzbekPoint(point)}
+                  onClick={() => zoomInOnUzbekPoint(point)}
                 >
                   <div className="relative group cursor-pointer animate-marker-drop transition-transform duration-200 hover:scale-115 active:scale-95">
                     <Pin
@@ -474,7 +560,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
             {selectedUzbekPoint && (
               <InfoWindow
                 position={selectedUzbekPoint.coordinates}
-                onCloseClick={() => onSelectUzbekPoint(null)}
+                onCloseClick={handleDeselectAll}
               >
                 <div className="max-w-[280px] p-1 font-sans text-slate-900 animate-scale-in">
                   <div className="relative h-28 -mx-1 -mt-1 mb-2 rounded-t overflow-hidden bg-slate-100">
