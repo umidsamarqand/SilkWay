@@ -543,43 +543,49 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                   onSelectPoint(point);
                   onFlyToPoint(point);
                 }}
-                className={`p-3.5 rounded-2xl border cursor-pointer text-left ${
+                className={`group overflow-hidden rounded-2xl border cursor-pointer text-left ${
                   isSelected
                     ? 'border-amber-400 bg-[#0f1f47] shadow-lg shadow-amber-500/10 ring-2 ring-amber-400/40'
                     : 'border-slate-800/90 bg-[#0c1838]/85 hover:border-amber-400/60 hover:shadow-xl hover:shadow-black/30'
                 }`}
               >
-                <div className="flex gap-3">
-                  <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-slate-900 relative">
-                    <img
-                      src={point.imageUrl}
-                      alt={point.name}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-slate-950/85 text-white text-[9px] font-bold rounded">
-                      {point.city}
-                    </div>
+                {/* Full-width image header with fade & hover zoom */}
+                <div className="relative w-full h-40 overflow-hidden bg-slate-900">
+                  <img
+                    src={point.imageUrl}
+                    alt={point.name}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                  />
+                  {/* Fade effect: image blends into the card background */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c1838] via-[#0c1838]/15 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-transparent to-transparent" />
 
-                    {point.stars && (
-                      <div className="absolute bottom-1 left-1 px-1.5 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-extrabold rounded flex items-center gap-0.5 shadow-xs">
-                        <span>{point.stars}★</span>
-                      </div>
-                    )}
+                  <div className="absolute top-2.5 left-2.5 px-1.5 py-0.5 bg-slate-950/85 backdrop-blur-xs text-white text-[9px] font-bold rounded">
+                    {point.city}
                   </div>
 
+                  {point.stars && (
+                    <div className="absolute top-2.5 right-2.5 px-1.5 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-extrabold rounded flex items-center gap-0.5 shadow-xs">
+                      <span>{point.stars}★</span>
+                    </div>
+                  )}
+
+                  <h5 className="absolute bottom-2 left-3 right-3 text-sm font-bold text-white line-clamp-1 drop-shadow-md">
+                    {point.name}
+                  </h5>
+                </div>
+
+                <div className="p-3.5 pt-3">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-1 mb-1">
-                      <h5 className="text-xs font-bold text-white line-clamp-1">
-                        {point.name}
-                      </h5>
+                    <div className="flex items-start justify-end gap-1 mb-1">
                       {point.priceUsd !== undefined && (
                         <div className="text-right shrink-0">
                           <span className="text-xs font-mono font-bold text-amber-400 tabular-nums">
                             ${point.priceUsd}
                           </span>
                           <span className="text-[10px] text-slate-400 block -mt-0.5">
-                            {point.type === 'hotel' || point.type === 'hostel' 
+                            {point.type === 'hotel' || point.type === 'hostel'
                               ? t('results.night', '/night')
                               : point.type === 'restaurant'
                               ? t('results.avgMeal', ' avg meal')
