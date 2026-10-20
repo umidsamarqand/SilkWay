@@ -18,9 +18,7 @@ import {
   ArrowRight,
   ZoomIn,
   UtensilsCrossed,
-  ArrowUpDown,
   Search,
-  Filter,
   X,
   ExternalLink
 } from 'lucide-react';
@@ -293,178 +291,36 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         </button>
       </div>
 
-      {/* ===================== RANK & FILTER TOOLBAR ===================== */}
-      <div className="p-3.5 bg-[#0c1838]/85 rounded-2xl border border-slate-800/80 shadow-lg space-y-3 text-white">
-        {/* Row 1: Search & Sorting Selector */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('search.placeholder', 'Search by hotel name, dish, street, or feature...')}
-              className="w-full pl-9 pr-7 py-1.5 text-xs bg-slate-900/90 border border-slate-700/80 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/60 focus:border-amber-400 focus:shadow-lg focus:shadow-amber-500/10 transition-shadow"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-
-          {/* Ranking / Sort Dropdown */}
-          <div className="flex items-center gap-1.5 shrink-0 bg-slate-900/90 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs">
-            <ArrowUpDown className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-[11px] text-slate-400 font-medium">{t('rank.label', 'Rank:')}</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer"
-            >
-              <option value="rating" className="bg-slate-900 text-white">{t('rank.rating', '⭐ Highest Rated')}</option>
-              <option value="popular" className="bg-slate-900 text-white">{t('rank.popular', '🔥 Most Popular')}</option>
-              <option value="stars" className="bg-slate-900 text-white">{t('rank.stars', '✨ Stars (5★ to 3★)')}</option>
-              <option value="price_low" className="bg-slate-900 text-white">{t('rank.priceLow', '💲 Price: Low to High')}</option>
-              <option value="price_high" className="bg-slate-900 text-white">{t('rank.priceHigh', '💎 Price: High to Low')}</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Row 2: Star Filter */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs scrollbar-none">
-          <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
-            <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-            {t('stars.label', 'Stars:')}
+      {/* Cuisine Filter (If restaurants or all active) */}
+      {(activeSubtype === 'restaurant' || activeSubtype === 'all') && (
+        <div className="p-3.5 bg-[#0c1838]/85 rounded-2xl border border-slate-800/80 shadow-lg text-white">
+          <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block mb-1.5">
+            {t('cuisine.title', '🍲 Regional Cuisine Specialties:')}
           </span>
-          {[
-            { value: 'all', label: t('stars.all', 'All Stars') },
-            { value: 5, label: t('stars.5', '⭐⭐⭐⭐⭐ 5-Star Luxury') },
-            { value: 4, label: t('stars.4', '⭐⭐⭐⭐ 4-Star Boutique') },
-            { value: 3, label: t('stars.3', '⭐⭐⭐ 3-Star Comfort') }
-          ].map((starOpt) => {
-            const isActive = selectedStar === starOpt.value;
-            return (
-              <motion.button
-                key={String(starOpt.value)}
-                onClick={() => setSelectedStar(starOpt.value as any)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.93 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap ${
-                  isActive
-                    ? 'bg-amber-400 text-slate-950 font-bold shadow-xs'
-                    : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/60 transition-colors'
-                }`}
-              >
-                {starOpt.label}
-              </motion.button>
-            );
-          })}
-        </div>
-
-        {/* Row 3: Services & Amenities Filter */}
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-              <Filter className="w-3 h-3 text-amber-400" />
-              {t('amenities.filterLabel', 'Filter by Services & Amenities:')}
-            </span>
-            {selectedServices.length > 0 && (
-              <button
-                onClick={() => setSelectedServices([])}
-                className="text-[11px] text-amber-400 hover:text-amber-300 font-semibold"
-              >
-                {t('amenities.clear', 'Clear')} ({selectedServices.length})
-              </button>
-            )}
-          </div>
-
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-            {SERVICE_KEYS.map((srvKey) => {
-              const isSelected = selectedServices.includes(srvKey);
-              const label = t(`srv.${srvKey}`, srvKey);
-              const icon = SERVICE_ICONS[srvKey] || '✨';
+            {CUISINE_KEYS.map((cKey) => {
+              const isActive = selectedCuisine === cKey;
+              const label = t(`cuisine.${cKey}`, cKey);
               return (
                 <motion.button
-                  key={srvKey}
-                  onClick={() => {
-                    setSelectedServices(prev =>
-                      isSelected ? prev.filter(s => s !== srvKey) : [...prev, srvKey]
-                    );
-                  }}
-                  whileHover={{ scale: 1.06, y: -1 }}
+                  key={cKey}
+                  onClick={() => setSelectedCuisine(cKey)}
+                  whileHover={{ scale: 1.06 }}
                   whileTap={{ scale: 0.92 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                  className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap flex items-center gap-1 shrink-0 ${
-                    isSelected
-                      ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-xs'
-                      : 'bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/60 transition-colors'
+                  className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap ${
+                    isActive
+                      ? 'bg-orange-500 text-white font-bold shadow-xs'
+                      : 'bg-orange-950/40 text-orange-200 border border-orange-800/60 hover:bg-orange-900/60 transition-colors'
                   }`}
                 >
-                  <span>{icon}</span>
-                  <span>{label}</span>
+                  {label}
                 </motion.button>
               );
             })}
           </div>
         </div>
-
-        {/* Row 4: Cuisine Filter (If restaurants or all active) */}
-        {(activeSubtype === 'restaurant' || activeSubtype === 'all') && (
-          <div className="pt-2 border-t border-slate-800/80">
-            <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block mb-1.5">
-              {t('cuisine.title', '🍲 Regional Cuisine Specialties:')}
-            </span>
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-              {CUISINE_KEYS.map((cKey) => {
-                const isActive = selectedCuisine === cKey;
-                const label = t(`cuisine.${cKey}`, cKey);
-                return (
-                  <motion.button
-                    key={cKey}
-                    onClick={() => setSelectedCuisine(cKey)}
-                    whileHover={{ scale: 1.06 }}
-                    whileTap={{ scale: 0.92 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap ${
-                      isActive
-                        ? 'bg-orange-500 text-white font-bold shadow-xs'
-                        : 'bg-orange-950/40 text-orange-200 border border-orange-800/60 hover:bg-orange-900/60 transition-colors'
-                    }`}
-                  >
-                    {label}
-                  </motion.button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Results summary bar */}
-        <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
-          <span>
-            {t('results.showing', 'Showing')} <strong className="text-white">{filteredAndRankedPoints.length}</strong> {t('results.verifiedSpots', 'verified spots')}
-            {activeCity !== 'all' && ` ${t('results.inCity', 'in')} ${activeCity}`}
-          </span>
-          {(selectedStar !== 'all' || selectedServices.length > 0 || selectedCuisine !== 'all' || searchQuery) && (
-            <button
-              onClick={() => {
-                setSelectedStar('all');
-                setSelectedServices([]);
-                setSelectedCuisine('all');
-                setSearchQuery('');
-              }}
-              className="text-amber-400 hover:text-amber-300 font-semibold"
-            >
-              {t('nav.resetFilters', 'Reset Filters')}
-            </button>
-          )}
-        </div>
-      </div>
+      )}
 
       {/* Cards List for Filtered & Ranked Points */}
       <div className="space-y-3">
