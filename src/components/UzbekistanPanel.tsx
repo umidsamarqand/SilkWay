@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { UzbekPoint, UzbekPointType, TaxiBooking, CityDistrictInfo } from '../types/travel';
 import { UZBEKISTAN_POINTS, INITIAL_TAXI_BOOKINGS, UZBEK_CITIES_AND_DISTRICTS } from '../data/uzbekistanData';
 import { useLanguage } from '../context/LanguageContext';
@@ -567,20 +568,28 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
             </button>
           </div>
         ) : (
-          filteredAndRankedPoints.map((point) => {
+          <AnimatePresence initial={false} mode="popLayout">
+          {filteredAndRankedPoints.map((point, pointIndex) => {
             const isSelected = selectedPoint?.id === point.id;
 
             return (
-              <div
+              <motion.div
                 key={point.id}
+                layout
+                initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.15 } }}
+                transition={{ duration: 0.4, delay: Math.min(pointIndex, 10) * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -4, scale: 1.012 }}
+                whileTap={{ scale: 0.985 }}
                 onClick={() => {
                   onSelectPoint(point);
                   onFlyToPoint(point);
                 }}
-                className={`p-3.5 rounded-2xl border transition-all cursor-pointer text-left ${
+                className={`p-3.5 rounded-2xl border cursor-pointer text-left ${
                   isSelected
                     ? 'border-amber-400 bg-[#0f1f47] shadow-lg shadow-amber-500/10 ring-2 ring-amber-400/40'
-                    : 'border-slate-800/90 bg-[#0c1838]/85 hover:border-amber-400/60 hover:shadow-lg hover:shadow-black/30'
+                    : 'border-slate-800/90 bg-[#0c1838]/85 hover:border-amber-400/60 hover:shadow-xl hover:shadow-black/30'
                 }`}
               >
                 <div className="flex gap-3">
@@ -732,16 +741,32 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
-          })
+          })}
+          </AnimatePresence>
         )}
       </div>
 
       {/* Airport Taxi Booking Modal */}
+      <AnimatePresence>
       {showTaxiModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 text-slate-900 space-y-4 animate-in fade-in zoom-in duration-150">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          onClick={() => setShowTaxiModal(false)}
+          className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4"
+        >
+          <motion.div
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, scale: 0.94, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 10 }}
+            transition={{ type: 'spring', stiffness: 340, damping: 30 }}
+            className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 text-slate-900 space-y-4"
+          >
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="p-2 bg-amber-100 text-amber-900 rounded-lg">
@@ -889,9 +914,10 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 </button>
               </form>
             )}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   );
 };

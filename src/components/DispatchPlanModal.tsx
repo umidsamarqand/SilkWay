@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ItineraryStop, FilterState } from '../types/travel';
 import { useLanguage } from '../context/LanguageContext';
 import { 
@@ -62,8 +63,6 @@ export const DispatchPlanModal: React.FC<DispatchPlanModalProps> = ({
       setUzsAmount((100 * exchangeRate).toString());
     }
   }, [isOpen, tripBudgetUsd, exchangeRate]);
-
-  if (!isOpen) return null;
 
   // Handle USD input change
   const handleUsdChange = (val: string) => {
@@ -132,8 +131,24 @@ Logistics Manifest Generated via Silk Way Tourism & Logistics Platform.
   const parsedUzs = parseFloat(uzsAmount.replace(/,/g, '')) || 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          onClick={onClose}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs"
+        >
+      <motion.div
+        onClick={(e) => e.stopPropagation()}
+        initial={{ opacity: 0, scale: 0.94, y: 18 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 10 }}
+        transition={{ type: 'spring', stiffness: 340, damping: 30 }}
+        className="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden"
+      >
         {/* Modal Header */}
         <div className="p-4 md:p-6 border-b border-slate-200 flex items-center justify-between bg-slate-50/70">
           <div className="flex items-center gap-2.5">
@@ -437,7 +452,9 @@ Logistics Manifest Generated via Silk Way Tourism & Logistics Platform.
             </button>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
-import { 
+import { motion, AnimatePresence } from 'motion/react';
+import {
   FilterState, 
   ActivityCategory, 
   TransitMode, 
@@ -684,21 +685,27 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </div>
             ) : (
               <div className="space-y-3">
-                {destinations.map((dest) => {
+                {destinations.map((dest, destIndex) => {
                   const isSelected = selectedDestination?.id === dest.id;
                   const inItinerary = itineraryIds.has(dest.id);
 
                   return (
-                    <div
+                    <motion.div
                       key={dest.id}
+                      layout
+                      initial={{ opacity: 0, y: 14 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: Math.min(destIndex, 8) * 0.045, ease: [0.22, 1, 0.36, 1] }}
+                      whileHover={{ y: -3, scale: 1.012 }}
+                      whileTap={{ scale: 0.99 }}
                       onClick={() => {
                         onSelectDestination(dest);
                         onFlyToDestination(dest);
                       }}
-                      className={`p-3 rounded-xl border transition-all cursor-pointer text-left ${
+                      className={`p-3 rounded-xl border cursor-pointer text-left ${
                         isSelected
                           ? 'border-blue-600 bg-blue-50/40 shadow-sm ring-1 ring-blue-500'
-                          : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-xs'
+                          : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/5'
                       }`}
                     >
                       <div className="flex gap-3">
@@ -765,7 +772,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -832,14 +839,28 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
                 {/* Ordered Itinerary Stops */}
                 <div className="relative pl-6 space-y-4 before:content-[''] before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">
+                  <AnimatePresence initial={false}>
                   {itinerary.map((stop, idx) => (
-                    <div key={stop.id} className="relative group">
+                    <motion.div
+                      key={stop.id}
+                      layout
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 24, transition: { duration: 0.2 } }}
+                      transition={{ duration: 0.35, delay: idx * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                      className="relative group"
+                    >
                       {/* Step Circle Indicator */}
-                      <div className="absolute -left-6 top-1 w-5 h-5 rounded-full bg-slate-900 text-white text-[10px] font-bold flex items-center justify-center ring-4 ring-white shadow-xs">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 18, delay: idx * 0.06 + 0.1 }}
+                        className="absolute -left-6 top-1 w-5 h-5 rounded-full bg-slate-900 text-white text-[10px] font-bold flex items-center justify-center ring-4 ring-white shadow-xs"
+                      >
                         {idx + 1}
-                      </div>
+                      </motion.div>
 
-                      <div className="p-3 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition-all">
+                      <div className="p-3 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-md transition-all">
                         <div className="flex items-start justify-between gap-2 mb-1.5">
                           <div>
                             <h5 className="text-xs font-bold text-slate-900">{stop.destination.name}</h5>
@@ -884,8 +905,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                           </button>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
+                  </AnimatePresence>
                 </div>
               </div>
             )}

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'motion/react';
 import { Navbar } from './components/Navbar';
 import { MapSection } from './components/MapSection';
 import { FilterSidebar } from './components/FilterSidebar';
@@ -235,7 +236,12 @@ export default function App() {
   const itineraryIds = useMemo(() => new Set(itinerary.map(i => i.destination.id)), [itinerary]);
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans"
+    >
       {/* Top Bar Navigation */}
       <Navbar
         activeTab={activeTab}
@@ -305,34 +311,57 @@ export default function App() {
         />
 
         {/* Mobile View Toggle Pill (Only on screens < lg) */}
-        <div className="lg:hidden fixed bottom-18 left-1/2 -translate-x-1/2 z-40 pointer-events-auto">
+        <motion.div
+          initial={{ y: 40, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.15, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="lg:hidden fixed bottom-18 left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
+        >
           <div className="flex items-center p-1 bg-[#0c1838]/95 backdrop-blur-md rounded-full border border-slate-700/80 shadow-2xl shadow-black/80 ring-1 ring-amber-400/40">
             <button
               type="button"
               onClick={() => setMobileTab('directory')}
-              className={`px-3.5 py-1.5 text-xs rounded-full font-bold transition-all flex items-center gap-1.5 ${
+              className={`relative px-3.5 py-1.5 text-xs rounded-full font-bold flex items-center gap-1.5 ${
                 mobileTab === 'directory'
-                  ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                  : 'text-slate-300 hover:text-white'
+                  ? 'text-slate-950'
+                  : 'text-slate-300 hover:text-white transition-colors'
               }`}
             >
-              <Building2 className="w-3.5 h-3.5" />
-              <span>{t('mobile.list', 'Directory')}</span>
+              {mobileTab === 'directory' && (
+                <motion.span
+                  layoutId="mobileTabPill"
+                  transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 shadow-md shadow-amber-500/20"
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5" />
+                <span>{t('mobile.list', 'Directory')}</span>
+              </span>
             </button>
             <button
               type="button"
               onClick={() => setMobileTab('map')}
-              className={`px-3.5 py-1.5 text-xs rounded-full font-bold transition-all flex items-center gap-1.5 ${
+              className={`relative px-3.5 py-1.5 text-xs rounded-full font-bold flex items-center gap-1.5 ${
                 mobileTab === 'map'
-                  ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                  : 'text-slate-300 hover:text-white'
+                  ? 'text-slate-950'
+                  : 'text-slate-300 hover:text-white transition-colors'
               }`}
             >
-              <Compass className="w-3.5 h-3.5" />
-              <span>{t('mobile.map', 'Map')}</span>
+              {mobileTab === 'map' && (
+                <motion.span
+                  layoutId="mobileTabPill"
+                  transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 shadow-md shadow-amber-500/20"
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-1.5">
+                <Compass className="w-3.5 h-3.5" />
+                <span>{t('mobile.map', 'Map')}</span>
+              </span>
             </button>
           </div>
-        </div>
+        </motion.div>
       </main>
 
       {/* Logistics Dispatch Sheet Modal */}
@@ -342,6 +371,6 @@ export default function App() {
         itinerary={itinerary}
         filter={filter}
       />
-    </div>
+    </motion.div>
   );
 }

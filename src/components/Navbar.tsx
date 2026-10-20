@@ -1,12 +1,13 @@
 import React from 'react';
-import { 
-  Compass, 
-  Luggage, 
-  Building2, 
-  UtensilsCrossed, 
-  Eye, 
-  Bed, 
-  Car, 
+import { motion, AnimatePresence } from 'motion/react';
+import {
+  Compass,
+  Luggage,
+  Building2,
+  UtensilsCrossed,
+  Eye,
+  Bed,
+  Car,
   SlidersHorizontal,
   MapPin,
   ChevronDown
@@ -93,22 +94,32 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="bg-[#091124]/95 backdrop-blur-md border-b border-slate-800/80 z-30 shrink-0 text-white shadow-xl flex flex-col">
+    <motion.header
+      initial={{ y: -24, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="bg-[#091124]/95 backdrop-blur-md border-b border-slate-800/80 z-30 shrink-0 text-white shadow-xl flex flex-col"
+    >
       {/* Primary Top Row */}
       <div className="h-16 px-3 sm:px-4 md:px-6 flex items-center justify-between gap-2 sm:gap-3">
         {/* Zone 1: Wordmark & Motto */}
         <div className="flex items-center gap-3 shrink-0">
-          <a 
-            href="/" 
+          <a
+            href="/"
             className="flex items-center gap-2.5 group"
             aria-label="Silk Way Homepage"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 text-slate-950 flex items-center justify-center shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform shrink-0">
+            <motion.div
+              whileHover={{ rotate: 18, scale: 1.08 }}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+              className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-terracotta-500 text-slate-950 flex items-center justify-center shadow-md shadow-amber-500/20 shrink-0"
+            >
               <Compass className="w-5 h-5 text-slate-950" />
-            </div>
+            </motion.div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="text-base sm:text-lg font-black tracking-tight text-white">{t('brand.name', 'Silk Way')}</span>
+                <span className="text-base sm:text-lg font-black tracking-tight text-white group-hover:shimmer-text transition-colors">{t('brand.name', 'Silk Way')}</span>
                 <span className="text-[10px] font-bold text-amber-300 bg-amber-500/20 border border-amber-400/30 px-1.5 py-0.2 rounded uppercase tracking-wider">
                   {t('brand.country', 'Uzbekistan')}
                 </span>
@@ -121,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Zone 2: The Universal Navigation Bar (Visible on md+) */}
-        <nav 
+        <nav
           className="hidden md:flex items-center gap-1 overflow-x-auto scrollbar-none py-1 px-1.5 bg-slate-900/90 rounded-2xl border border-slate-800/90 shadow-inner"
           role="tablist"
           aria-label="Silk Way Universal Directory Navigator"
@@ -133,25 +144,34 @@ export const Navbar: React.FC<NavbarProps> = ({
                 key={tab.id}
                 type="button"
                 onClick={() => onSelectTab(tab.id)}
-                className={`shrink-0 px-2.5 py-1.5 text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                className={`relative shrink-0 px-2.5 py-1.5 text-xs rounded-xl flex items-center justify-center gap-1.5 whitespace-nowrap ${
                   isActive
-                    ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/25 ring-1 ring-amber-300/40'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70'
+                    ? 'text-slate-950 font-bold'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors'
                 }`}
                 role="tab"
                 aria-selected={isActive}
               >
-                {tab.icon}
-                <span className="font-semibold">{tab.label}</span>
-                {tab.count !== undefined && (
-                  <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold tabular-nums ${
-                    isActive 
-                      ? 'bg-slate-950 text-amber-300' 
-                      : 'bg-slate-800 text-slate-400'
-                  }`}>
-                    {tab.count}
-                  </span>
+                {isActive && (
+                  <motion.span
+                    layoutId="navActivePill"
+                    transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                    className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 shadow-md shadow-amber-500/25 ring-1 ring-amber-300/40"
+                  />
                 )}
+                <span className="relative z-10 flex items-center gap-1.5">
+                  {tab.icon}
+                  <span className="font-semibold">{tab.label}</span>
+                  {tab.count !== undefined && (
+                    <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold tabular-nums ${
+                      isActive
+                        ? 'bg-slate-950 text-amber-300'
+                        : 'bg-slate-800 text-slate-400'
+                    }`}>
+                      {tab.count}
+                    </span>
+                  )}
+                </span>
               </button>
             );
           })}
@@ -192,19 +212,31 @@ export const Navbar: React.FC<NavbarProps> = ({
             {t('nav.resetFilters', 'Reset')}
           </button>
 
-          <button
+          <motion.button
             type="button"
             onClick={onOpenDispatchModal}
-            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-300 rounded-xl transition-all shadow-md shadow-amber-500/20 active:scale-95 shrink-0"
+            whileHover={{ scale: 1.035 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+            className="btn-shine inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-300 rounded-xl shadow-md shadow-amber-500/20 shrink-0"
           >
             <Luggage className="w-3.5 h-3.5 text-slate-950" />
             <span className="hidden sm:inline">{t('nav.exportPlan', 'Export Plan')}</span>
-            {itineraryCount > 0 && (
-              <span className="ml-0.5 px-1.5 py-0.2 bg-slate-950 text-amber-300 rounded text-[10px] font-bold">
-                {itineraryCount}
-              </span>
-            )}
-          </button>
+            <AnimatePresence mode="wait">
+              {itineraryCount > 0 && (
+                <motion.span
+                  key={itineraryCount}
+                  initial={{ scale: 0.4, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.4, opacity: 0 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+                  className="ml-0.5 px-1.5 py-0.2 bg-slate-950 text-amber-300 rounded text-[10px] font-bold"
+                >
+                  {itineraryCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </div>
       </div>
 
@@ -221,29 +253,38 @@ export const Navbar: React.FC<NavbarProps> = ({
               key={tab.id}
               type="button"
               onClick={() => onSelectTab(tab.id)}
-              className={`shrink-0 px-2.5 py-1 text-xs rounded-lg transition-all flex items-center justify-center gap-1 whitespace-nowrap ${
+              className={`relative shrink-0 px-2.5 py-1 text-xs rounded-lg flex items-center justify-center gap-1 whitespace-nowrap ${
                 isActive
-                  ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold shadow-xs'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  ? 'text-slate-950 font-bold'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors'
               }`}
               role="tab"
               aria-selected={isActive}
             >
-              {tab.icon}
-              <span className="font-semibold">{tab.label}</span>
-              {tab.count !== undefined && (
-                <span className={`text-[10px] font-mono px-1 py-0.2 rounded font-bold tabular-nums ${
-                  isActive 
-                    ? 'bg-slate-950 text-amber-300' 
-                    : 'bg-slate-800 text-slate-400'
-                }`}>
-                  {tab.count}
-                </span>
+              {isActive && (
+                <motion.span
+                  layoutId="navActivePillMobile"
+                  transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                  className="absolute inset-0 rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 shadow-xs"
+                />
               )}
+              <span className="relative z-10 flex items-center gap-1">
+                {tab.icon}
+                <span className="font-semibold">{tab.label}</span>
+                {tab.count !== undefined && (
+                  <span className={`text-[10px] font-mono px-1 py-0.2 rounded font-bold tabular-nums ${
+                    isActive
+                      ? 'bg-slate-950 text-amber-300'
+                      : 'bg-slate-800 text-slate-400'
+                  }`}>
+                    {tab.count}
+                  </span>
+                )}
+              </span>
             </button>
           );
         })}
       </nav>
-    </header>
+    </motion.header>
   );
 };

@@ -1,18 +1,170 @@
 @import "tailwindcss";
 
+@theme {
+  /* ---- Silk Way palette: deep desert-night indigo + warm caravan accents ---- */
+  --color-silk-950: #05070f;
+  --color-silk-900: #070e20;
+  --color-silk-850: #0a1226;
+  --color-silk-800: #0c1838;
+  --color-silk-700: #0f1f47;
+  --color-silk-600: #15295c;
+
+  --color-amber-glow: #fbbf24;
+  --color-terracotta-400: #fb923c;
+  --color-terracotta-500: #f2742a;
+  --color-terracotta-600: #d9541a;
+  --color-turquoise-400: #2dd4bf;
+  --color-turquoise-500: #14b8a6;
+
+  --ease-silk: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-silk-in: cubic-bezier(0.64, 0, 0.78, 0);
+
+  --animate-fade-up: fade-up 0.6s var(--ease-silk) both;
+  --animate-fade-in: fade-in 0.5s var(--ease-silk) both;
+  --animate-scale-in: scale-in 0.35s var(--ease-silk) both;
+  --animate-shimmer: shimmer 2.6s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-glow-pulse: glow-pulse 2.4s ease-in-out infinite;
+  --animate-marker-drop: marker-drop 0.55s var(--ease-silk) both;
+  --animate-gradient-pan: gradient-pan 18s ease infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+  }
+
+  @keyframes marker-drop {
+    0% {
+      opacity: 0;
+      transform: translateY(-18px) scale(0.6);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(2px) scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes gradient-pan {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     color: #0f172a;
-    background-color: #f8fafc;
+    background-color: #05070f;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Gentle ambient motion across the whole canvas so the app never feels static */
+  #root {
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse 60% 50% at 15% -10%, rgba(45, 212, 191, 0.10), transparent 60%),
+      radial-gradient(ellipse 55% 45% at 90% 0%, rgba(251, 191, 36, 0.10), transparent 55%),
+      radial-gradient(ellipse 60% 55% at 50% 115%, rgba(242, 116, 42, 0.08), transparent 60%),
+      linear-gradient(135deg, #05070f, #070e20 45%, #0a1226 100%);
+    background-size: 160% 160%, 160% 160%, 160% 160%, 200% 200%;
+    animation: var(--animate-gradient-pan);
+  }
+
+  /* Color/border smoothing only — transform & box-shadow are left to framer-motion
+     and the targeted .card-lift utility so the two animation systems never fight. */
+  * {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: var(--ease-silk);
+    transition-duration: 180ms;
+  }
+
+  ::selection {
+    background: rgba(251, 191, 36, 0.35);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(251, 191, 36, 0.65);
+    outline-offset: 2px;
   }
 }
 
 /* Custom subtle scrollbars for dense logistics panels */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -20,15 +172,106 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.4);
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.35), rgba(148, 163, 184, 0.35));
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.6);
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.55), rgba(100, 116, 139, 0.6));
 }
 
 .font-mono-numbers {
   font-family: 'JetBrains Mono', monospace;
   font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Reusable motion & surface utilities                                     */
+/* ---------------------------------------------------------------------- */
+
+.animate-fade-up {
+  animation: var(--animate-fade-up);
+}
+
+.animate-fade-in {
+  animation: var(--animate-fade-in);
+}
+
+.animate-scale-in {
+  animation: var(--animate-scale-in);
+}
+
+.animate-float {
+  animation: var(--animate-float);
+}
+
+.animate-glow-pulse {
+  animation: var(--animate-glow-pulse);
+}
+
+.animate-marker-drop {
+  animation: var(--animate-marker-drop);
+  transform-origin: bottom center;
+}
+
+.card-lift {
+  transition: transform 220ms var(--ease-silk), box-shadow 220ms var(--ease-silk), border-color 220ms var(--ease-silk);
+  will-change: transform;
+}
+
+.card-lift:hover {
+  transform: translateY(-3px) scale(1.012);
+}
+
+.card-lift:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #fcd34d 0%, #fbbf24 25%, #f2742a 50%, #fbbf24 75%, #fcd34d 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: var(--animate-shimmer);
+}
+
+.glass-panel {
+  background: rgba(10, 18, 38, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.55) 48%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 650ms var(--ease-silk);
+}
+
+.btn-shine:hover::after {
+  transform: translateX(120%);
+}
+
+/* Stagger helper: apply alongside animate-fade-up, set --stagger-index inline */
+[data-stagger] {
+  animation-delay: calc(var(--stagger-index, 0) * 45ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

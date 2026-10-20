@@ -172,7 +172,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
   return (
     <div className={`w-full lg:w-[62%] xl:w-[64%] h-full relative flex-col bg-slate-950 overflow-hidden ${className || 'flex'}`}>
       {/* Top Floating Map Command Bar */}
-      <div className="absolute top-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+      <div className="absolute top-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 pointer-events-none animate-fade-up">
         {/* Left: Mobile Back Button + Quick Region Filters */}
         <div className="flex items-center gap-1.5 pointer-events-auto">
           {onSwitchToDirectory && (
@@ -239,7 +239,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
 
       {/* Corridors Dropdown Overlay */}
       {showCorridorList && (
-        <div className="absolute top-14 right-3 z-20 w-80 bg-[#0c1838]/98 backdrop-blur-md rounded-2xl border border-slate-800 shadow-2xl p-3.5 max-h-96 overflow-y-auto text-slate-100">
+        <div className="absolute top-14 right-3 z-20 w-80 bg-[#0c1838]/98 backdrop-blur-md rounded-2xl border border-slate-800 shadow-2xl p-3.5 max-h-96 overflow-y-auto text-slate-100 animate-scale-in origin-top-right">
           <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
             <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
               {t('map.transitCorridors', 'Transit Corridors')}
@@ -319,7 +319,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
                   title={`${dest.name}, ${dest.country}`}
                   onClick={() => onSelectDestination(dest)}
                 >
-                  <div className="relative group cursor-pointer transition-transform hover:scale-110 active:scale-95">
+                  <div className="relative group cursor-pointer animate-marker-drop transition-transform duration-200 hover:scale-110 active:scale-95">
                     {isSelected ? (
                       <Pin
                         background="#0f172a"
@@ -344,7 +344,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
                     )}
 
                     {/* Floating Title Tooltip on Hover */}
-                    <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-slate-900/90 backdrop-blur-xs text-white text-[11px] font-medium rounded shadow-md whitespace-nowrap pointer-events-none z-30">
+                    <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-slate-900/90 backdrop-blur-xs text-white text-[11px] font-medium rounded shadow-md whitespace-nowrap pointer-events-none z-30 animate-fade-in">
                       {dest.name} · ${dest.dailyBudgetMin}–${dest.dailyBudgetMax}/day
                     </div>
 
@@ -364,7 +364,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
                 position={selectedDestination.coordinates}
                 onCloseClick={() => onSelectDestination(null)}
               >
-                <div className="max-w-[280px] p-1 font-sans text-slate-900">
+                <div className="max-w-[280px] p-1 font-sans text-slate-900 animate-scale-in">
                   <div className="relative h-28 -mx-1 -mt-1 mb-2 rounded-t overflow-hidden bg-slate-100">
                     <img
                       src={selectedDestination.imageUrl}
@@ -450,14 +450,14 @@ export const MapSection: React.FC<MapSectionProps> = ({
                   title={`${point.name} (${point.city})`}
                   onClick={() => onSelectUzbekPoint(point)}
                 >
-                  <div className="relative group cursor-pointer transition-transform hover:scale-115 active:scale-95">
+                  <div className="relative group cursor-pointer animate-marker-drop transition-transform duration-200 hover:scale-115 active:scale-95">
                     <Pin
                       background={isSelected ? '#0f172a' : pinBg}
                       borderColor="#ffffff"
                       glyphColor="#ffffff"
                       scale={isSelected ? 1.3 : 1.1}
                     />
-                    <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-0.5 bg-slate-900/90 text-white text-[10px] font-semibold rounded shadow-md whitespace-nowrap pointer-events-none z-30">
+                    <div className="hidden group-hover:flex items-center absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-0.5 bg-slate-900/90 backdrop-blur-xs text-white text-[10px] font-semibold rounded shadow-md whitespace-nowrap pointer-events-none z-30 animate-fade-in">
                       {point.name} · {point.city}
                     </div>
                   </div>
@@ -471,7 +471,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
                 position={selectedUzbekPoint.coordinates}
                 onCloseClick={() => onSelectUzbekPoint(null)}
               >
-                <div className="max-w-[280px] p-1 font-sans text-slate-900">
+                <div className="max-w-[280px] p-1 font-sans text-slate-900 animate-scale-in">
                   <div className="relative h-28 -mx-1 -mt-1 mb-2 rounded-t overflow-hidden bg-slate-100">
                     <img
                       src={selectedUzbekPoint.imageUrl}
@@ -551,10 +551,10 @@ export const MapSection: React.FC<MapSectionProps> = ({
                 title={`${activeCityDistrict.name} (${activeCityDistrict.isDistrict ? 'District' : 'City'})`}
                 zIndex={150}
               >
-                <div className="relative flex flex-col items-center cursor-pointer group">
+                <div className="relative flex flex-col items-center cursor-pointer group animate-marker-drop">
                   {/* Glowing Radar Pulse Effect */}
                   <div className="absolute -inset-4 rounded-full bg-amber-400/40 animate-ping pointer-events-none" />
-                  <div className="absolute -inset-8 rounded-full bg-blue-500/20 animate-pulse pointer-events-none" />
+                  <div className="absolute -inset-8 rounded-full bg-turquoise-500/20 animate-glow-pulse pointer-events-none" />
                   
                   {/* High Visibility Pin Badge */}
                   <div className="px-3 py-1.5 rounded-full bg-slate-950 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-2xl border-2 border-amber-400 whitespace-nowrap">
@@ -575,7 +575,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
 
         {/* Floating Active City / District Status Badge */}
         {activeCityDistrict && activeCityDistrict.id !== 'all' && (
-          <div className="absolute top-16 left-3 z-20 flex items-center gap-2 bg-slate-950/90 backdrop-blur-md text-white px-3 py-1.5 rounded-xl border border-amber-400/60 shadow-xl text-xs">
+          <div className="absolute top-16 left-3 z-20 flex items-center gap-2 bg-slate-950/90 backdrop-blur-md text-white px-3 py-1.5 rounded-xl border border-amber-400/60 shadow-xl text-xs animate-fade-up">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
             <span className="text-slate-300 font-medium">Zoomed to:</span>
             <strong className="text-amber-300">{activeCityDistrict.name}</strong>
@@ -593,7 +593,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
       </div>
 
       {/* Bottom Floating Legend & Map Style Selector */}
-      <div className="absolute bottom-4 left-4 z-10 hidden sm:flex items-center gap-3 bg-[#091124]/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-slate-800/90 shadow-xl text-slate-300">
+      <div className="absolute bottom-4 left-4 z-10 hidden sm:flex items-center gap-3 bg-[#091124]/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-slate-800/90 shadow-xl text-slate-300 animate-fade-up" style={{ animationDelay: '150ms' }}>
         <div className="flex items-center gap-3 text-xs">
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-blue-500 inline-block shadow-xs"></span>
