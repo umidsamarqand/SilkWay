@@ -11,11 +11,10 @@ import {
   MapPin, 
   Phone, 
   Star, 
-  Check, 
-  DollarSign, 
-  Clock, 
-  ShieldCheck, 
-  Navigation, 
+  Check,
+  DollarSign,
+  Clock,
+  Navigation,
   ArrowRight,
   ZoomIn,
   UtensilsCrossed,
@@ -264,37 +263,34 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* Uzbekistan Hero Banner */}
-      <div className="p-4 bg-gradient-to-br from-[#0c1838] via-[#091124] to-[#1a0f35] text-white rounded-2xl relative overflow-hidden shadow-xl border border-amber-500/30 ring-1 ring-amber-400/20">
-        {/* Atmospheric Ambient Glows */}
-        <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/15 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-blue-500/20 rounded-full blur-2xl pointer-events-none" />
-
-        <div className="relative z-10">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-bold tracking-widest uppercase bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded shadow-xs">
-              {t('brand.fullTagline', 'Silk Way · Experience Uzbekistan Effortlessly')}
-            </span>
-            <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1">
-              <Check className="w-3.5 h-3.5" /> {t('hero.activeDirectory', 'Full Country Directory Active')}
-            </span>
-          </div>
-
-          <h3 className="text-base font-bold text-white mb-1 tracking-tight">
-            {t('hero.title', 'Hotels, Hostels, Restaurants & Taxis')}
-          </h3>
-          <p className="text-xs text-slate-300 leading-relaxed mb-3">
-            {t('hero.description', 'Experience Uzbekistan effortlessly: boutique hotels, gourmet restaurants, backpacker hostels, and official airport taxi transfers across Tashkent, Samarkand, Bukhara, Khiva, and Zaamin.')}
-          </p>
-
-          <button
-            onClick={() => setShowTaxiModal(true)}
-            className="w-full py-2.5 px-3 text-xs font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-300 text-slate-950 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01] active:scale-[0.99]"
-          >
-            <Car className="w-4 h-4 text-slate-950" />
-            <span>{t('hero.bookTaxi', 'Book Meet & Greet Airport Taxi (Name Sign)')}</span>
-          </button>
+      {/* Top Search Bar (replaces the old hero banner) */}
+      <div className="flex items-stretch gap-2">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-amber-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t('search.placeholder', 'Search by hotel name, dish, street, or feature...')}
+            className="w-full pl-11 pr-10 py-3.5 text-sm bg-[#0c1838]/90 border border-amber-500/30 ring-1 ring-amber-400/10 rounded-2xl text-white placeholder:text-slate-500 shadow-xl focus:outline-none focus:ring-2 focus:ring-amber-400/60 focus:border-amber-400 focus:shadow-amber-500/10 transition-shadow"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
+
+        <button
+          onClick={() => setShowTaxiModal(true)}
+          title={t('hero.bookTaxi', 'Book Meet & Greet Airport Taxi (Name Sign)')}
+          className="shrink-0 px-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-300 text-slate-950 rounded-2xl shadow-xl shadow-amber-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center"
+        >
+          <Car className="w-4.5 h-4.5" />
+        </button>
       </div>
 
       {/* ===================== RANK & FILTER TOOLBAR ===================== */}
@@ -469,38 +465,6 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
           )}
         </div>
       </div>
-
-      {/* Active Airport Taxi Bookings Section */}
-      {bookings.length > 0 && (
-        <div className="p-3.5 bg-emerald-950/40 border border-emerald-800/70 rounded-2xl space-y-2 text-emerald-200">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              {t('taxi.activePickups', 'Active Airport Pickups')} ({bookings.length})
-            </span>
-            <span className="text-[10px] uppercase font-bold text-emerald-300 bg-emerald-900/60 border border-emerald-700/60 px-2 py-0.5 rounded">
-              {t('taxi.confirmed', 'Confirmed')}
-            </span>
-          </div>
-
-          {bookings.map((b) => (
-            <div key={b.id} className="p-2.5 bg-slate-900/90 rounded-xl border border-emerald-900/60 text-xs space-y-1 text-white">
-              <div className="flex items-center justify-between font-bold text-white">
-                <span>{b.passengerName} ({t('taxi.flight', 'Flight')} {b.flightNumber})</span>
-                <span className="font-mono text-emerald-400">${b.priceUsd} USD</span>
-              </div>
-              <div className="text-[11px] text-slate-400 flex items-center justify-between">
-                <span>{b.airport} → {b.dropoffLocation}</span>
-                <span>{b.passengers} {t('taxi.pax', 'Pax')} · {b.luggageCount} {t('taxi.bags', 'Bags')}</span>
-              </div>
-              <div className="text-[11px] text-slate-300 pt-1 border-t border-slate-800 flex items-center justify-between">
-                <span className="text-slate-400">{t('taxi.driver', 'Driver:')} <strong className="text-white">{b.driverName}</strong></span>
-                <span className="font-mono text-amber-400">{b.driverPhone}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Cards List for Filtered & Ranked Points */}
       <div className="space-y-3">
