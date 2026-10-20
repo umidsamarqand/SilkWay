@@ -297,58 +297,6 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
         </div>
       </div>
 
-      {/* Historic Districts & Quarters of Active City */}
-      <div className="p-3 bg-[#0c1838]/85 rounded-2xl border border-slate-800/80 shadow-md space-y-2 text-white">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-white">
-            <MapPin className="w-3.5 h-3.5 text-amber-400" />
-            <span>
-              {activeCity !== 'all' 
-                ? `${t('location.keyDistricts', 'Historic Districts')}: ${activeCity}` 
-                : t('location.allUzbekistan', 'All Uzbekistan Directory Active')}
-            </span>
-          </div>
-          {activeDistrictId !== 'all' ? (
-            <button
-              type="button"
-              onClick={() => handleSelectDistrict('all')}
-              className="text-[10px] font-bold text-amber-950 bg-amber-400 hover:bg-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs transition-colors"
-            >
-              <span>{t('amenities.clear', 'Clear')} ✕</span>
-            </button>
-          ) : (
-            <span className="text-[10px] text-slate-400 font-mono">
-              {availableDistricts.length > 0 ? `${availableDistricts.length} historic quarters` : t('hero.activeDirectory', 'Full Directory Active')}
-            </span>
-          )}
-        </div>
-
-        {availableDistricts.length > 0 && (
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none pt-1">
-            {availableDistricts.map((dist) => {
-              const isDistActive = activeDistrictId === dist.id;
-              return (
-                <button
-                  key={dist.id}
-                  type="button"
-                  onClick={() => handleSelectDistrict(dist.id, dist)}
-                  className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-all whitespace-nowrap flex items-center gap-1 shrink-0 ${
-                    isDistActive
-                      ? 'bg-amber-400 text-slate-950 font-bold shadow-xs ring-2 ring-amber-300'
-                      : 'bg-slate-900/80 text-slate-300 border border-slate-700/60 hover:bg-slate-800 hover:text-white'
-                  }`}
-                >
-                  <span>{dist.name}</span>
-                  <span className="text-[10px] text-slate-400 font-mono">
-                    · {dist.cityName}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
       {/* ===================== RANK & FILTER TOOLBAR ===================== */}
       <div className="p-3.5 bg-[#0c1838]/85 rounded-2xl border border-slate-800/80 shadow-lg space-y-3 text-white">
         {/* Row 1: Search & Sorting Selector */}
