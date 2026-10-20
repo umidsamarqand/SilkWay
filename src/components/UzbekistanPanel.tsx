@@ -560,19 +560,20 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     : 'border-slate-800/90 bg-[#0c1838]/85 hover:border-amber-400/60'
                 }`}
               >
-                {/* Full-width image header with fade & hover zoom */}
-                <div className="relative w-full h-44 overflow-hidden bg-slate-900">
+                {/* Full-width image header: top half clean photo, bottom half fades into the card */}
+                <div className="relative w-full h-60 overflow-hidden bg-slate-900">
                   <img
                     src={point.imageUrl}
                     alt={point.name}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover scale-105 transition-transform duration-700 ease-out group-hover:scale-115"
                   />
-                  {/* Fade effect: image blends down into the card for legible overlay text */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
-                  {/* Soft side vignette blending the photo into the card's own color */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c1838] via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
+                  {/* Thin top scrim so the city/star badges stay legible on a bright photo */}
+                  <div className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-black/45 to-transparent pointer-events-none" />
+
+                  {/* Bottom 50%: the photo dissolves fully into the card's own background color */}
+                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0c1838] via-[#0c1838]/65 to-transparent pointer-events-none" />
+                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
 
                   <div className="absolute top-2.5 left-2.5 px-1.5 py-0.5 bg-slate-950/85 backdrop-blur-xs text-white text-[9px] font-bold rounded">
                     {point.city}
@@ -583,15 +584,14 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                       <span>{point.stars}★</span>
                     </div>
                   )}
-
-                  <h5 className="absolute bottom-2.5 left-3 right-3 text-base font-bold text-white line-clamp-1 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] transition-transform duration-500 group-hover:-translate-y-0.5">
-                    {point.name}
-                  </h5>
                 </div>
 
                 <div className="p-3.5 pt-3">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-end gap-1 mb-1">
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <h5 className="text-base font-bold text-white line-clamp-1">
+                        {point.name}
+                      </h5>
                       {point.priceUsd !== undefined && (
                         <div className="text-right shrink-0">
                           <span className="text-xs font-mono font-bold text-amber-400 tabular-nums">
