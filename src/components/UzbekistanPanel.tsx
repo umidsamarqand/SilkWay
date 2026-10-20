@@ -536,30 +536,43 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                 initial={{ opacity: 0, y: 16, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.15 } }}
-                transition={{ duration: 0.4, delay: Math.min(pointIndex, 10) * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -4, scale: 1.012 }}
-                whileTap={{ scale: 0.985 }}
+                whileHover={{
+                  y: -6,
+                  scale: 1.016,
+                  boxShadow: isSelected
+                    ? '0 22px 45px -12px rgba(251,191,36,0.35)'
+                    : '0 22px 45px -14px rgba(0,0,0,0.55)'
+                }}
+                whileTap={{ scale: 0.983 }}
+                transition={{
+                  duration: 0.4,
+                  delay: Math.min(pointIndex, 10) * 0.04,
+                  ease: [0.22, 1, 0.36, 1],
+                  boxShadow: { duration: 0.25 }
+                }}
                 onClick={() => {
                   onSelectPoint(point);
                   onFlyToPoint(point);
                 }}
                 className={`group overflow-hidden rounded-2xl border cursor-pointer text-left ${
                   isSelected
-                    ? 'border-amber-400 bg-[#0f1f47] shadow-lg shadow-amber-500/10 ring-2 ring-amber-400/40'
-                    : 'border-slate-800/90 bg-[#0c1838]/85 hover:border-amber-400/60 hover:shadow-xl hover:shadow-black/30'
+                    ? 'border-amber-400 bg-[#0f1f47] ring-2 ring-amber-400/40'
+                    : 'border-slate-800/90 bg-[#0c1838]/85 hover:border-amber-400/60'
                 }`}
               >
                 {/* Full-width image header with fade & hover zoom */}
-                <div className="relative w-full h-40 overflow-hidden bg-slate-900">
+                <div className="relative w-full h-44 overflow-hidden bg-slate-900">
                   <img
                     src={point.imageUrl}
                     alt={point.name}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                    className="w-full h-full object-cover scale-105 transition-transform duration-700 ease-out group-hover:scale-115"
                   />
-                  {/* Fade effect: image blends into the card background */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c1838] via-[#0c1838]/15 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-transparent to-transparent" />
+                  {/* Fade effect: image blends down into the card for legible overlay text */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
+                  {/* Soft side vignette blending the photo into the card's own color */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c1838] via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
 
                   <div className="absolute top-2.5 left-2.5 px-1.5 py-0.5 bg-slate-950/85 backdrop-blur-xs text-white text-[9px] font-bold rounded">
                     {point.city}
@@ -571,7 +584,7 @@ export const UzbekistanPanel: React.FC<UzbekistanPanelProps> = ({
                     </div>
                   )}
 
-                  <h5 className="absolute bottom-2 left-3 right-3 text-sm font-bold text-white line-clamp-1 drop-shadow-md">
+                  <h5 className="absolute bottom-2.5 left-3 right-3 text-base font-bold text-white line-clamp-1 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] transition-transform duration-500 group-hover:-translate-y-0.5">
                     {point.name}
                   </h5>
                 </div>
